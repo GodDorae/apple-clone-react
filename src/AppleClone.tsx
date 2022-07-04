@@ -5,12 +5,19 @@ import Section0 from "./components/Section0";
 import Section1 from "./components/Section1";
 import Section2 from "./components/Section2";
 import Section3 from "./components/Section3";
+import { useEffect } from "react";
+import setLayout from "./functions/setLayout";
 
 const Container = styled.div`
   overflow-x: hidden;
 `;
 
 function AppleClone() {
+  setLayout();
+  useEffect(() => {
+    window.addEventListener("resize", setLayout);
+  }, []);
+
   return (
     <Container>
       <Navigation />

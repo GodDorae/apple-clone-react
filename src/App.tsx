@@ -1,6 +1,7 @@
 import { Fragment } from "react";
 import { createGlobalStyle } from "styled-components";
 import AppleClone from "./AppleClone";
+import { RecoilRoot } from "recoil";
 
 const GlobalStyle = createGlobalStyle`
 @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;900&display=swap');
@@ -27,9 +28,9 @@ function App() {
   return (
     <Fragment>
       <GlobalStyle />
-      <AppleClone />
+      <RecoilRoot children={<AppleClone />} />
     </Fragment>
-  )
+  );
 }
 
 export default App;
