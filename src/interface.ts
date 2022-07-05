@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-export interface ISceneInfo {
+interface ISceneInfo {
   type: string;
   heightNum: number;
   scrollHeight: number;
@@ -9,7 +9,7 @@ export interface ISceneInfo {
 }
 
 interface IObjs {
-  container: HTMLDivElement | any;
+  container: HTMLDivElement | null;
 }
 
 interface IObjs0 extends IObjs {
