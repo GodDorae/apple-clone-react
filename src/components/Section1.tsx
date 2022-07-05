@@ -1,4 +1,7 @@
 import styled from "styled-components";
+import { useState, useRef, useEffect } from "react";
+import { sceneInfo } from "../interface";
+import { useRecoilValue } from "recoil";
 
 const Section = styled.section`
   padding-top: 50vh;
@@ -29,8 +32,26 @@ const Description = styled.p`
 `;
 
 function Section1() {
+  const scrollSection1 = useRef<HTMLElement>(null);
+  const allSceneInfos = useRecoilValue(sceneInfo);
+  const [height, setHeight] = useState(allSceneInfos[0].scrollHeight);
+
+  function heightCalc() {
+    setHeight(() => {
+      return allSceneInfos[1].heightNum * window.innerHeight;
+    });
+    if (scrollSection1.current) {
+      scrollSection1.current.style.height = `${height}px`;
+    };
+  }
+
+  useEffect(() => {
+    heightCalc();
+    window.addEventListener("resize", heightCalc);
+  }, [])
+
   return (
-    <Section id="scroll-section-1">
+    <Section ref={scrollSection1}>
       <Description>
         <strong>보통 스크롤 영역</strong>
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequuntur,

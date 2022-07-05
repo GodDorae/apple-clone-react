@@ -1,4 +1,7 @@
 import styled from "styled-components";
+import { useState, useRef, useEffect } from "react";
+import { sceneInfo } from "../interface";
+import { useRecoilValue } from "recoil";
 
 const Section = styled.section`
   padding-top: 50vh;
@@ -37,8 +40,26 @@ const CanvasCaption = styled.p`
 `;
 
 function Section3() {
+  const scrollSection3 = useRef<HTMLElement>(null);
+  const allSceneInfos = useRecoilValue(sceneInfo);
+  const [height, setHeight] = useState(allSceneInfos[3].scrollHeight);
+
+  function heightCalc() {
+    setHeight(() => {
+      return allSceneInfos[3].heightNum * window.innerHeight;
+    });
+    if (scrollSection3.current) {
+      scrollSection3.current.style.height = `${height}px`;
+    };
+  }
+
+  useEffect(() => {
+    heightCalc();
+    window.addEventListener("resize", heightCalc);
+  }, [])
+
   return (
-    <Section id="scroll-section-3">
+    <Section ref={scrollSection3}>
       <MidMessage>
         <strong>Retina Mug</strong>
         <br />

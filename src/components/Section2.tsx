@@ -1,4 +1,7 @@
 import styled from "styled-components";
+import { useState, useRef, useEffect } from "react";
+import { sceneInfo } from "../interface";
+import { useRecoilValue } from "recoil";
 
 const Section = styled.section`
   padding-top: 50vh;
@@ -83,9 +86,27 @@ const MessageC = styled(DescMessage)<{ showScene: boolean }>`
 
 function Section2() {
   const showScene: boolean = document.body.id === "show-scene-2";
+  const scrollSection2 = useRef<HTMLElement>(null);
+  const allSceneInfos = useRecoilValue(sceneInfo);
+  const [height, setHeight] = useState(allSceneInfos[2].scrollHeight);
+
+  function heightCalc() {
+    setHeight(() => {
+      return allSceneInfos[2].heightNum * window.innerHeight;
+    });
+    if (scrollSection2.current) {
+      scrollSection2.current.style.height = `${height}px`;
+    };
+  }
+
+  useEffect(() => {
+    heightCalc();
+    window.addEventListener("resize", heightCalc);
+  }, [])
+
 
   return (
-    <Section id="scroll-section-2">
+    <Section ref={scrollSection2}>
       <MessageA id="section2-a" showScene={showScene}>
         <p>
           <small>편안한 촉감</small>

@@ -9,7 +9,7 @@ interface ISceneInfo {
 }
 
 interface IObjs {
-  container: HTMLDivElement | null;
+  container: HTMLElement | null;
 }
 
 interface IObjs0 extends IObjs {
