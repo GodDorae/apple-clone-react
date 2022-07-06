@@ -3,8 +3,7 @@ import { useState, useRef, useEffect } from "react";
 import { sceneInfo } from "../interface";
 import { useRecoilValue } from "recoil";
 
-const Section = styled.section< { height: string } >`
-  height: ${(props) => props.height};
+const Section = styled.section`
   padding-top: 50vh;
 `;
 
@@ -37,24 +36,9 @@ function Section1() {
   const scrollSection1 = useRef<HTMLElement>(null);
   const allSceneInfos = useRecoilValue(sceneInfo);
   const currentSceneInfo = allSceneInfos[sceneNumber];
-  const [height, setHeight] = useState(`${currentSceneInfo.heightNum * window.innerHeight}px`);
-
-  useEffect(() => {
-    window.addEventListener("load", () => {
-      setHeight(() => {
-        return `${currentSceneInfo.heightNum * window.innerHeight}px`;
-      });
-    });
-  
-    window.addEventListener("resize", () => {
-      setHeight(() => {
-        return `${currentSceneInfo.heightNum * window.innerHeight}px`;
-      });
-    });
-  }, []);
 
   return (
-    <Section ref={scrollSection1} height={height}>
+    <Section ref={scrollSection1}>
       <Description>
         <strong>보통 스크롤 영역</strong>
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequuntur,
