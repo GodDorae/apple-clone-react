@@ -3,7 +3,8 @@ import { useState, useRef, useEffect } from "react";
 import { sceneInfo } from "../interface";
 import { useRecoilValue } from "recoil";
 
-const Section = styled.section`
+const Section = styled.section< { height: string } >`
+  height: ${(props) => props.height};
   padding-top: 50vh;
 `;
 
@@ -40,26 +41,28 @@ const CanvasCaption = styled.p`
 `;
 
 function Section3() {
+  const sceneNumber = 3;
   const scrollSection3 = useRef<HTMLElement>(null);
   const allSceneInfos = useRecoilValue(sceneInfo);
-  const [height, setHeight] = useState(allSceneInfos[3].scrollHeight);
-
-  function heightCalc() {
-    setHeight(() => {
-      return allSceneInfos[3].heightNum * window.innerHeight;
-    });
-    if (scrollSection3.current) {
-      scrollSection3.current.style.height = `${height}px`;
-    };
-  }
+  const currentSceneInfo = allSceneInfos[sceneNumber];
+  const [height, setHeight] = useState(`${currentSceneInfo.heightNum * window.innerHeight}px`);
 
   useEffect(() => {
-    heightCalc();
-    window.addEventListener("resize", heightCalc);
-  }, [])
+    window.addEventListener("load", () => {
+      setHeight(() => {
+        return `${currentSceneInfo.heightNum * window.innerHeight}px`;
+      });
+    });
+  
+    window.addEventListener("resize", () => {
+      setHeight(() => {
+        return `${currentSceneInfo.heightNum * window.innerHeight}px`;
+      });
+    });
+  }, []);
 
   return (
-    <Section ref={scrollSection3}>
+    <Section ref={scrollSection3} height={height}>
       <MidMessage>
         <strong>Retina Mug</strong>
         <br />
