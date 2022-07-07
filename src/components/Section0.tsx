@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { useState, useRef, useEffect } from "react";
 import { sceneInfo } from "../interface";
-import { useRecoilValue } from "recoil";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 const Section = styled.section< { height: string } >`
   height: ${(props) => props.height};
@@ -73,18 +73,33 @@ function Section0() {
   const allSceneInfos = useRecoilValue(sceneInfo);
   const currentSceneInfo = allSceneInfos[sceneNumber];
   const [height, setHeight] = useState(`${currentSceneInfo.heightNum * window.innerHeight}px`);
+  const scrollHeightHandler = useSetRecoilState(sceneInfo);
+  function updateScrollHeight() {
+    scrollHeightHandler((prev) => {
+      const currentScene = prev[sceneNumber];
+      currentScene.scrollHeight = currentScene.heightNum * window.innerHeight;
+      const beforeCurrentScene = prev.slice(0, sceneNumber);
+      const afterCurrentScene = prev.slice(sceneNumber + 1);
+      const newArray = [...beforeCurrentScene, currentScene, ...afterCurrentScene];
+      return newArray;
+    })
+  };
 
   useEffect(() => {
     window.addEventListener("load", () => {
       setHeight(() => {
         return `${currentSceneInfo.heightNum * window.innerHeight}px`;
       });
+
+      updateScrollHeight();
     });
   
     window.addEventListener("resize", () => {
       setHeight(() => {
         return `${currentSceneInfo.heightNum * window.innerHeight}px`;
       });
+
+      updateScrollHeight();
     });
   }, []);
 
