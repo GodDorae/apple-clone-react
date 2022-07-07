@@ -85,16 +85,14 @@ function Section0() {
       return newArray;
     })
   }
-
-  useEffect(() => {
-    window.addEventListener("load", () => {
-      setHeight(() => {
-        return `${currentSceneInfo.heightNum * window.innerHeight}px`;
-      });
-
-      storeScrollHeight();
-    });
   
+  useEffect(() => {
+    setHeight(() => {
+      return `${currentSceneInfo.heightNum * window.innerHeight}px`;
+    });
+
+    storeScrollHeight();
+
     window.addEventListener("resize", () => {
       setHeight(() => {
         return `${currentSceneInfo.heightNum * window.innerHeight}px`;

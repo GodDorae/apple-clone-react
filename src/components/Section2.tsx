@@ -106,14 +106,12 @@ function Section2() {
   }
 
   useEffect(() => {
-    window.addEventListener("load", () => {
-      setHeight(() => {
-        return `${currentSceneInfo.heightNum * window.innerHeight}px`;
-      });
-
-      storeScrollHeight();
+    setHeight(() => {
+      return `${currentSceneInfo.heightNum * window.innerHeight}px`;
     });
-  
+
+    storeScrollHeight();
+    
     window.addEventListener("resize", () => {
       setHeight(() => {
         return `${currentSceneInfo.heightNum * window.innerHeight}px`;

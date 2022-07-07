@@ -49,7 +49,7 @@ function Section1() {
   }
 
   useEffect(() => {
-    window.addEventListener("load", storeScrollHeight);
+    storeScrollHeight();
     window.addEventListener("resize", storeScrollHeight);
   }, []);
 
