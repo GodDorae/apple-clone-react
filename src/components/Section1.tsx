@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { useState, useRef, useEffect } from "react";
 import { sceneInfo } from "../interface";
-import { useRecoilValue } from "recoil";
+import { useEffect, useRef } from "react";
+import { useRecoilValue, useSetRecoilState } from "recoil";
 
 const Section = styled.section`
   padding-top: 50vh;
@@ -33,9 +33,26 @@ const Description = styled.p`
 
 function Section1() {
   const sceneNumber = 1;
-  const scrollSection1 = useRef<HTMLElement>(null);
   const allSceneInfos = useRecoilValue(sceneInfo);
-  const currentSceneInfo = allSceneInfos[sceneNumber];
+  const scrollSection1 = useRef<HTMLElement>(null);
+  const setSceneInfo = useSetRecoilState(sceneInfo);
+
+  function storeScrollHeight() {
+    setSceneInfo((prev) => {
+      const newScrollHeight = { scrollHeight: scrollSection1.current ? scrollSection1.current.offsetHeight : 0 };
+      const updatedSceneInfo = {...prev[sceneNumber], ...newScrollHeight};
+      const before = prev.slice(0, sceneNumber);
+      const after = prev.slice(sceneNumber + 1);
+      const newArray = [...before, updatedSceneInfo, ...after];
+      return newArray;
+    })
+  }
+
+  useEffect(() => {
+    window.addEventListener("load", storeScrollHeight);
+    window.addEventListener("resize", storeScrollHeight);
+  }, []);
+
 
   return (
     <Section ref={scrollSection1}>
