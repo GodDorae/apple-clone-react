@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { sceneInfo } from "../interface";
+import { ISceneInfo, ISceneInfo0, ISceneInfo2, ISceneInfo3, sceneInfo } from "../interface";
 import { useEffect, useRef } from "react";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 
 const Section = styled.section`
   padding-top: 50vh;
@@ -33,29 +33,73 @@ const Description = styled.p`
 
 function Section1() {
   const sceneNumber = 1;
-  const allSceneInfos = useRecoilValue(sceneInfo);
   const scrollSection1 = useRef<HTMLElement>(null);
-  const setSceneInfo = useSetRecoilState(sceneInfo);
+  const [allSceneInfos, setSceneInfos] = useRecoilState(sceneInfo);
+  const currentSceneInfo = allSceneInfos[sceneNumber];
 
-  function storeScrollHeight() {
-    setSceneInfo((prev) => {
-      const newScrollHeight = { scrollHeight: scrollSection1.current ? scrollSection1.current.offsetHeight : 0 };
-      const updatedSceneInfo = {...prev[sceneNumber], ...newScrollHeight};
+  function setLayout() {
+    if (allSceneInfos[sceneNumber].type === "sticky") {
+      setSceneInfos((prev) => {
+        const newScrollHeight = {
+          scrollHeight: currentSceneInfo.heightNum * window.innerHeight,
+        };
+        const updatedSceneInfo = { ...prev[sceneNumber], ...newScrollHeight };
+        const before = prev.slice(0, sceneNumber);
+        const after = prev.slice(sceneNumber + 1);
+        const newArray = [...before, updatedSceneInfo, ...after];
+        return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
+      });
+    } else if (allSceneInfos[sceneNumber].type === "normal") {
+      setSceneInfos((prev) => {
+        const offsetHeight = currentSceneInfo.objs.container
+          ? currentSceneInfo.objs.container.offsetHeight
+          : 0;
+        const newScrollHeight = { scrollHeight: offsetHeight };
+        const updatedSceneInfo = { ...prev[sceneNumber], ...newScrollHeight };
+        const before = prev.slice(0, sceneNumber);
+        const after = prev.slice(sceneNumber + 1);
+        const newArray = [...before, updatedSceneInfo, ...after];
+        return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
+      });
+    }
+  }
+
+  function setDOM() {
+    setSceneInfos((prev) => {
+      const currentSceneObj = prev[sceneNumber].objs;
+      const containerElementID = `scroll-section-${sceneNumber}`;
+      const containerElement = {
+        container: document.getElementById(containerElementID),
+      };
+      const updatedObj = { ...currentSceneObj, ...containerElement };
+      const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
       const before = prev.slice(0, sceneNumber);
       const after = prev.slice(sceneNumber + 1);
       const newArray = [...before, updatedSceneInfo, ...after];
-      return newArray;
-    })
+      return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
+    });
   }
 
   useEffect(() => {
-    storeScrollHeight();
-    window.addEventListener("resize", storeScrollHeight);
+    if (document.readyState === "complete") {
+      setDOM();
+
+      setLayout();
+    }
+
+    window.addEventListener("resize", () => {
+      setDOM();
+
+      setLayout();
+    });
   }, []);
 
+  useEffect(() => {
+    console.log(allSceneInfos);
+  }, [allSceneInfos]);
 
   return (
-    <Section ref={scrollSection1}>
+    <Section ref={scrollSection1} id="scroll-section-1">
       <Description>
         <strong>보통 스크롤 영역</strong>
         Lorem, ipsum dolor sit amet consectetur adipisicing elit. Consequuntur,

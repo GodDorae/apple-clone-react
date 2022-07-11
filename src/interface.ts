@@ -1,6 +1,6 @@
 import { atom } from "recoil";
 
-interface ISceneInfo {
+export interface ISceneInfo {
   type: string;
   heightNum: number;
   scrollHeight: number;
@@ -19,7 +19,7 @@ interface IObjs0 extends IObjs {
   messageD: HTMLDivElement | null;
 }
 
-interface ISceneInfo0 extends ISceneInfo {
+export interface ISceneInfo0 extends ISceneInfo {
   objs: IObjs0;
   values: object;
 }
@@ -29,7 +29,7 @@ const sceneInfo0: ISceneInfo0 = {
   heightNum: 5,
   scrollHeight: 0,
   objs: {
-    container: document.querySelector("#scroll-section-0"),
+    container: null,
     messageA: document.querySelector("section0-a"),
     messageB: document.querySelector("section0-b"),
     messageC: document.querySelector("section0-c"),
@@ -43,7 +43,7 @@ const sceneInfo1: ISceneInfo = {
   heightNum: 5,
   scrollHeight: 0,
   objs: {
-    container: document.querySelector("#scroll-section-1"),
+    container: null,
   },
   values: {},
 };
@@ -56,7 +56,7 @@ interface IObjs2 extends IObjs {
   pinC: HTMLDivElement | null;
 }
 
-interface ISceneInfo2 extends ISceneInfo {
+export interface ISceneInfo2 extends ISceneInfo {
   objs: IObjs2;
   values: object;
 }
@@ -66,7 +66,7 @@ const sceneInfo2: ISceneInfo2 = {
   heightNum: 5,
   scrollHeight: 0,
   objs: {
-    container: document.querySelector("#scroll-section-2"),
+    container: null,
     messageA: document.querySelector("section2-a"),
     messageB: document.querySelector("section2-b"),
     messageC: document.querySelector("section2-c"),
@@ -80,7 +80,7 @@ interface IObjs3 extends IObjs {
   canvasCaption: HTMLDivElement | null;
 }
 
-interface ISceneInfo3 extends ISceneInfo {
+export interface ISceneInfo3 extends ISceneInfo {
   objs: IObjs3;
   values: object;
 }
@@ -90,13 +90,28 @@ const sceneInfo3: ISceneInfo3 = {
   heightNum: 5,
   scrollHeight: 0,
   objs: {
-    container: document.querySelector("#scroll-section-3"),
+    container: null,
     canvasCaption: document.querySelector("#canvas-caption"),
   },
   values: {},
 };
 
-export const sceneInfo = atom<ISceneInfo[]>({
+export const sceneInfo = atom<[ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3]>({
   key: "sceneInfo",
   default: [sceneInfo0, sceneInfo1, sceneInfo2, sceneInfo3],
+});
+
+export let yOffset = atom<number>({
+  key: "yOffset",
+  default: 0,
+});
+
+export let prevScrollHeight = atom<number>({
+  key: "prevScrollHeight",
+  default: 0,
+});
+
+export let currentScene = atom<number>({
+  key: "currentScene",
+  default: 0,
 });

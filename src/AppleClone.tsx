@@ -6,12 +6,12 @@ import Section1 from "./components/Section1";
 import Section2 from "./components/Section2";
 import Section3 from "./components/Section3";
 
+
 const Container = styled.div`
   overflow-x: hidden;
 `;
 
 function AppleClone() {
-
   return (
     <Container>
       <Navigation />

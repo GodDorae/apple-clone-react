@@ -1,7 +1,13 @@
 import styled from "styled-components";
 import { useState, useRef, useEffect } from "react";
-import { sceneInfo } from "../interface";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import {
+  ISceneInfo,
+  ISceneInfo0,
+  ISceneInfo2,
+  ISceneInfo3,
+  sceneInfo,
+} from "../interface";
+import { useRecoilState } from "recoil";
 
 const Section = styled.section< { height: string } >`
   height: ${(props) => props.height};
@@ -89,40 +95,83 @@ function Section2() {
   const sceneNumber = 2;
   const showScene: boolean = document.body.id === "show-scene-2";
   const scrollSection2 = useRef<HTMLElement>(null);
-  const allSceneInfos = useRecoilValue(sceneInfo);
+  const [allSceneInfos, setSceneInfos] = useRecoilState(sceneInfo);
   const currentSceneInfo = allSceneInfos[sceneNumber];
-  const [height, setHeight] = useState(`${currentSceneInfo.heightNum * window.innerHeight}px`);
-  const setSceneInfo = useSetRecoilState(sceneInfo);
+  const [height, setHeight] = useState(
+    `${currentSceneInfo.heightNum * window.innerHeight}px`
+  );
 
-  function storeScrollHeight() {
-    setSceneInfo((prev) => {
-      const newScrollHeight = { scrollHeight: currentSceneInfo.heightNum * window.innerHeight };
-      const updatedSceneInfo = {...prev[sceneNumber], ...newScrollHeight};
+  function setLayout() {
+    if (allSceneInfos[sceneNumber].type === "sticky") {
+      setSceneInfos((prev) => {
+        const newScrollHeight = {
+          scrollHeight: currentSceneInfo.heightNum * window.innerHeight,
+        };
+        const updatedSceneInfo = { ...prev[sceneNumber], ...newScrollHeight };
+        const before = prev.slice(0, sceneNumber);
+        const after = prev.slice(sceneNumber + 1);
+        const newArray = [...before, updatedSceneInfo, ...after];
+        return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
+      });
+    } else if (allSceneInfos[sceneNumber].type === "normal") {
+      setSceneInfos((prev) => {
+        const offsetHeight = currentSceneInfo.objs.container
+          ? currentSceneInfo.objs.container.offsetHeight
+          : 0;
+        const newScrollHeight = { scrollHeight: offsetHeight };
+        const updatedSceneInfo = { ...prev[sceneNumber], ...newScrollHeight };
+        const before = prev.slice(0, sceneNumber);
+        const after = prev.slice(sceneNumber + 1);
+        const newArray = [...before, updatedSceneInfo, ...after];
+        return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
+      });
+    }
+  }
+
+  function setDOM() {
+    setSceneInfos((prev) => {
+      const currentSceneObj = prev[sceneNumber].objs;
+      const containerElementID = `scroll-section-${sceneNumber}`;
+      const containerElement = {
+        container: document.getElementById(containerElementID),
+      };
+      const updatedObj = { ...currentSceneObj, ...containerElement };
+      const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
       const before = prev.slice(0, sceneNumber);
       const after = prev.slice(sceneNumber + 1);
       const newArray = [...before, updatedSceneInfo, ...after];
-      return newArray;
-    })
+      return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
+    });
   }
 
   useEffect(() => {
-    setHeight(() => {
-      return `${currentSceneInfo.heightNum * window.innerHeight}px`;
-    });
+    if (document.readyState === "complete") {
+      setHeight(() => {
+        return `${currentSceneInfo.heightNum * window.innerHeight}px`;
+      });
 
-    storeScrollHeight();
-    
+      setDOM();
+
+      setLayout();
+    }
+
     window.addEventListener("resize", () => {
       setHeight(() => {
         return `${currentSceneInfo.heightNum * window.innerHeight}px`;
       });
 
-      storeScrollHeight();
+      setDOM();
+
+      setLayout();
     });
   }, []);
 
+  useEffect(() => {
+    console.log(allSceneInfos);
+  }, [allSceneInfos]);
+
   return (
-    <Section ref={scrollSection2} height={height}>
+    <Section ref={scrollSection2} height={height} id="scroll-section-2">
       <MessageA id="section2-a" showScene={showScene}>
         <p>
           <small>편안한 촉감</small>
