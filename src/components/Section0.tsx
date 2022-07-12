@@ -148,7 +148,7 @@ function Section0() {
   }, []);
 
   useEffect(() => {
-    console.log(allSceneInfos);
+    // console.log(allSceneInfos);
   }, [allSceneInfos]);
 
   return (

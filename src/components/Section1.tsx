@@ -1,6 +1,12 @@
 import styled from "styled-components";
-import { ISceneInfo, ISceneInfo0, ISceneInfo2, ISceneInfo3, sceneInfo } from "../interface";
-import { useEffect, useRef } from "react";
+import {
+  ISceneInfo,
+  ISceneInfo0,
+  ISceneInfo2,
+  ISceneInfo3,
+  sceneInfo,
+} from "../interface";
+import { useCallback, useEffect, useRef } from "react";
 import { useRecoilState } from "recoil";
 
 const Section = styled.section`
@@ -64,7 +70,7 @@ function Section1() {
     }
   }
 
-  function setDOM() {
+  const setDOM = useCallback(() => {
     setSceneInfos((prev) => {
       const currentSceneObj = prev[sceneNumber].objs;
       const containerElementID = `scroll-section-${sceneNumber}`;
@@ -78,21 +84,21 @@ function Section1() {
       const newArray = [...before, updatedSceneInfo, ...after];
       return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
     });
-  }
+  }, [allSceneInfos[sceneNumber].objs]);
 
   useEffect(() => {
     if (document.readyState === "complete") {
       setDOM();
-
-      setLayout();
     }
 
     window.addEventListener("resize", () => {
       setDOM();
-
-      setLayout();
     });
   }, []);
+
+  useEffect(() => {
+    setLayout();
+  }, [setDOM]);
 
   useEffect(() => {
     console.log(allSceneInfos);
