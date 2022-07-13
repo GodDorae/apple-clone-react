@@ -101,7 +101,7 @@ function Section1() {
   }, [setDOM]);
 
   useEffect(() => {
-    console.log(allSceneInfos);
+    // console.log(allSceneInfos);
   }, [allSceneInfos]);
 
   return (

@@ -1,4 +1,4 @@
-import { atom } from "recoil";
+import { atom, selector } from "recoil";
 
 export interface ISceneInfo {
   type: string;
@@ -96,9 +96,22 @@ const sceneInfo3: ISceneInfo3 = {
   values: {},
 };
 
-export const sceneInfo = atom<[ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3]>({
+export const sceneInfo = atom<
+  [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3]
+>({
   key: "sceneInfo",
   default: [sceneInfo0, sceneInfo1, sceneInfo2, sceneInfo3],
+});
+
+export const initialSceneInfo = selector<
+  [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3]
+>({
+  key: "initialSceneInfo",
+  get: ({ get }) => {
+    const allSceneInfos = get(sceneInfo);
+    return allSceneInfos;
+  },
+  set: ({ set }, newValue) => set(sceneInfo, newValue),
 });
 
 export let yOffset = atom<number>({
