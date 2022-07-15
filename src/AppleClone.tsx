@@ -5,7 +5,7 @@ import Section0 from "./components/Section0";
 import Section1 from "./components/Section1";
 import Section2 from "./components/Section2";
 import Section3 from "./components/Section3";
-import { prevScrollHeight, yOffset, initialSceneInfo, sceneInfo } from "./interface";
+import { scrollInfo, initialSceneInfo, sceneInfo } from "./interface";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { useEffect } from "react";
 
@@ -17,29 +17,39 @@ const Container = styled.div`
 function AppleClone() {
   const sceneInfoAtomValue = useRecoilValue(sceneInfo);
   const allSceneInfos = useRecoilValue(initialSceneInfo);
-  const [prevScrollHeightValue, setPrevScrollHeightValue] = useRecoilState(prevScrollHeight);
-  const [yOffsetValue, setYOffsetValue] = useRecoilState(yOffset);
+  const [scrollInfoValue, setScrollInfoValue] = useRecoilState(scrollInfo);
 
   function scrollLoop() {
-    for (let i = 0; i < allSceneInfos.length; i++ ) {
-      setPrevScrollHeightValue((prev) => {
-        return prev += allSceneInfos[i].scrollHeight;
-      });
-    }
+    setScrollInfoValue((prev) => {
+      const yOffsetValue = window.scrollY;
+      let tempCurrentScene = prev.currentScene;
+      let tempPrev = 0;
+      for (let i = 0; i < tempCurrentScene; i++) {
+        tempPrev += allSceneInfos[i].scrollHeight;
+      };
+      if (yOffsetValue > tempPrev + allSceneInfos[tempCurrentScene].scrollHeight) {
+        tempCurrentScene++;
+      }
+
+      if (yOffsetValue < tempPrev) {
+        tempCurrentScene--;
+      }
+
+      const newArray = { currentScene: tempCurrentScene, prevScrollHeight: tempPrev };
+
+      return newArray;
+    })
   }
 
   useEffect(() => {
-    if (prevScrollHeightValue !== 0) {
-      console.log(prevScrollHeightValue);
-    }
-  }, [prevScrollHeightValue]);
-
-  useEffect(() => {
     if (sceneInfoAtomValue[1].scrollHeight) {
-      console.log(allSceneInfos);
       window.addEventListener("scroll", scrollLoop);
     }
-  }, [sceneInfoAtomValue]);
+  }, [window.scrollY, sceneInfoAtomValue]);
+
+  useEffect(() => {
+    console.log(window.scrollY ,scrollInfoValue);
+}, [scrollInfoValue]);
 
   return (
     <Container>

@@ -114,17 +114,12 @@ export const initialSceneInfo = selector<
   set: ({ set }, newValue) => set(sceneInfo, newValue),
 });
 
-export let yOffset = atom<number>({
-  key: "yOffset",
-  default: 0,
-});
+interface IScrollInfo {
+  prevScrollHeight: number
+  currentScene: number
+}
 
-export let prevScrollHeight = atom<number>({
-  key: "prevScrollHeight",
-  default: 0,
-});
-
-export let currentScene = atom<number>({
-  key: "currentScene",
-  default: 0,
-});
+export const scrollInfo = atom<IScrollInfo>({
+  key: "scrollInfo",
+  default: { prevScrollHeight: 0, currentScene: 0 }
+})
