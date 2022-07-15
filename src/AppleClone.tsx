@@ -32,8 +32,11 @@ function AppleClone() {
       }
 
       if (yOffsetValue < tempPrev) {
+        if (tempCurrentScene === 0) return prev;
         tempCurrentScene--;
       }
+
+      document.body.setAttribute('id', `show-scene-${tempCurrentScene}`)
 
       const newArray = { currentScene: tempCurrentScene, prevScrollHeight: tempPrev };
 
@@ -48,7 +51,7 @@ function AppleClone() {
   }, [window.scrollY, sceneInfoAtomValue]);
 
   useEffect(() => {
-    console.log(window.scrollY ,scrollInfoValue);
+    console.log(scrollInfoValue.currentScene, document.body.id);
 }, [scrollInfoValue]);
 
   return (

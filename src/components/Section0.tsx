@@ -6,8 +6,9 @@ import {
   ISceneInfo2,
   ISceneInfo3,
   sceneInfo,
+  scrollInfo
 } from "../interface";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useRecoilValue } from "recoil";
 
 const Section = styled.section<{ height: string }>`
   height: ${(props) => props.height};
@@ -74,13 +75,14 @@ const MainMessageD = styled(MainMessage)<{ showScene: boolean }>`
 
 function Section0() {
   const sceneNumber = 0;
-  const showScene: boolean = document.body.id === "show-scene-0";
+  const [showScene, setShowScene] = useState(false);
   const scrollSection0 = useRef<HTMLElement>(null);
   const [allSceneInfos, setSceneInfos] = useRecoilState(sceneInfo);
   const currentSceneInfo = allSceneInfos[sceneNumber];
   const [height, setHeight] = useState(
     `${currentSceneInfo.heightNum * window.innerHeight}px`
   );
+  const scrollInfoValue = useRecoilValue(scrollInfo);
 
   function setLayout() {
     if (allSceneInfos[sceneNumber].type === "sticky") {
@@ -148,8 +150,18 @@ function Section0() {
   }, []);
 
   useEffect(() => {
-    // console.log(allSceneInfos);
-  }, [allSceneInfos]);
+    if (allSceneInfos[1].scrollHeight) {
+      if (document.body.id === "show-scene-0") {
+        setShowScene(() => {
+          return true;
+        })
+      } else {
+        setShowScene(() => {
+          return false;
+        })
+      }
+    }
+  }, [allSceneInfos, scrollInfoValue]);
 
   return (
     <Section ref={scrollSection0} height={height} id="scroll-section-0">
