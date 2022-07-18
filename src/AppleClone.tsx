@@ -5,7 +5,7 @@ import Section0 from "./components/Section0";
 import Section1 from "./components/Section1";
 import Section2 from "./components/Section2";
 import Section3 from "./components/Section3";
-import { scrollInfo, initialSceneInfo, sceneInfo } from "./interface";
+import { scrollInfo, initialSceneInfo, sceneInfo, enterNewScene } from "./interface";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { useEffect } from "react";
 
@@ -18,6 +18,225 @@ function AppleClone() {
   const sceneInfoAtomValue = useRecoilValue(sceneInfo);
   const allSceneInfos = useRecoilValue(initialSceneInfo);
   const [scrollInfoValue, setScrollInfoValue] = useRecoilState(scrollInfo);
+  const [enterNewSceneValue, setEnterNewSceneValue] = useRecoilState(enterNewScene);
+
+  function calcValues(values: [number, number, { start: number, end: number }], currentYOffset: number) {
+    let rv;
+    const scrollHeight = allSceneInfos[scrollInfoValue.currentScene].scrollHeight;
+    const scrollRatio = currentYOffset / scrollHeight;
+
+    if (values.length === 3) {
+      const partScrollStart = values[2].start * scrollHeight;
+      const partScrollEnd = values[2].end * scrollHeight;
+      const partScrollHeight = partScrollEnd - partScrollStart;
+
+      if (
+        currentYOffset >= partScrollStart &&
+        currentYOffset <= partScrollEnd
+      ) {
+        rv =
+          ((currentYOffset - partScrollStart) / partScrollHeight) *
+            (values[1] - values[0]) +
+          values[0];
+      } else if (currentYOffset < partScrollStart) {
+        rv = values[0];
+      } else if (currentYOffset > partScrollEnd) {
+        rv = values[1];
+      }
+    } else {
+      rv = scrollRatio * (values[1] - values[0]) + values[0];
+    }
+
+    return rv;
+  }
+
+  function playAnimation() {
+    const currentYOffset = window.scrollY - scrollInfoValue.prevScrollHeight;
+    const scrollRatio = currentYOffset / allSceneInfos[scrollInfoValue.currentScene].scrollHeight;
+
+    switch (scrollInfoValue.currentScene) {
+      case 0:
+        const objs0 = allSceneInfos[0].objs;
+        const values0 = allSceneInfos[0].values;
+        if (scrollRatio <= 0.22 && objs0?.messageA) {
+          // in
+          objs0.messageA.style.opacity = `${calcValues(
+            values0.messageA_opacity_in,
+            currentYOffset
+          )}`;
+          objs0.messageA.style.transform = `translate3d(0, ${calcValues(
+            values0.messageA_translateY_in,
+            currentYOffset
+          )}%, 0)`;
+        } else if (scrollRatio > 0.22 && objs0?.messageA) {
+          // out
+          objs0.messageA.style.opacity = `${calcValues(
+            values0.messageA_opacity_out,
+            currentYOffset
+          )}`;
+          objs0.messageA.style.transform = `translate3d(0, ${calcValues(
+            values0.messageA_translateY_out,
+            currentYOffset
+          )}%, 0)`;
+        }
+
+        if (scrollRatio <= 0.42 && objs0?.messageB) {
+          // in
+          objs0.messageB.style.opacity = `${calcValues(
+            values0.messageB_opacity_in,
+            currentYOffset
+          )}`;
+          objs0.messageB.style.transform = `translate3d(0, ${calcValues(
+            values0.messageB_translateY_in,
+            currentYOffset
+          )}%, 0)`;
+        } else if (scrollRatio > 0.42 && objs0?.messageB) {
+          // out
+          objs0.messageB.style.opacity = `${calcValues(
+            values0.messageB_opacity_out,
+            currentYOffset
+          )}`;
+          objs0.messageB.style.transform = `translate3d(0, ${calcValues(
+            values0.messageB_translateY_out,
+            currentYOffset
+          )}%, 0)`;
+        }
+
+        if (scrollRatio <= 0.62 && objs0?.messageC) {
+          // in
+          objs0.messageC.style.opacity = `${calcValues(
+            values0.messageC_opacity_in,
+            currentYOffset
+          )}`;
+          objs0.messageC.style.transform = `translate3d(0, ${calcValues(
+            values0.messageC_translateY_in,
+            currentYOffset
+          )}%, 0)`;
+        } else if (scrollRatio > 0.62 && objs0?.messageC) {
+          // out
+          objs0.messageC.style.opacity = `${calcValues(
+            values0.messageC_opacity_out,
+            currentYOffset
+          )}`;
+          objs0.messageC.style.transform = `translate3d(0, ${calcValues(
+            values0.messageC_translateY_out,
+            currentYOffset
+          )}%, 0)`;
+        }
+
+        if (scrollRatio <= 0.82 && objs0?.messageD) {
+          // in
+          objs0.messageD.style.opacity = `${calcValues(
+            values0.messageD_opacity_in,
+            currentYOffset
+          )}`;
+          objs0.messageD.style.transform = `translate3d(0, ${calcValues(
+            values0.messageD_translateY_in,
+            currentYOffset
+          )}%, 0)`;
+        } else if (scrollRatio > 0.82 && objs0?.messageD) {
+          // out
+          objs0.messageD.style.opacity = `${calcValues(
+            values0.messageD_opacity_out,
+            currentYOffset
+          )}`;
+          objs0.messageD.style.transform = `translate3d(0, ${calcValues(
+            values0.messageD_translateY_out,
+            currentYOffset
+          )}%, 0)`;
+        }
+        break;
+      case 2:
+        const objs2 = allSceneInfos[2].objs;
+        const values2 = allSceneInfos[2].values;
+
+        if (scrollRatio <= 0.25 && objs2?.messageA) {
+          // in
+          objs2.messageA.style.opacity = `${calcValues(
+            values2.messageA_opacity_in,
+            currentYOffset
+          )}`;
+          objs2.messageA.style.transform = `translate3d(0, ${calcValues(
+            values2.messageA_translateY_in,
+            currentYOffset
+          )}%, 0)`;
+        } else if (scrollRatio > 0.25 && objs2?.messageA) {
+          // out
+          objs2.messageA.style.opacity = `${calcValues(
+            values2.messageA_opacity_out,
+            currentYOffset
+          )}`;
+          objs2.messageA.style.transform = `translate3d(0, ${calcValues(
+            values2.messageA_translateY_out,
+            currentYOffset
+          )}%, 0)`;
+        }
+
+        if (scrollRatio <= 0.57 && objs2?.messageB && objs2?.pinB) {
+          // in
+          objs2.messageB.style.transform = `translate3d(0, ${calcValues(
+            values2.messageB_translateY_in,
+            currentYOffset
+          )}%, 0)`;
+          objs2.messageB.style.opacity = `${calcValues(
+            values2.messageB_opacity_in,
+            currentYOffset
+          )}`;
+          objs2.pinB.style.transform = `scaleY(${calcValues(
+            values2.pinB_scaleY,
+            currentYOffset
+          )})`;
+        } else if (scrollRatio > 0.57 && objs2?.messageB && objs2?.pinB) {
+          // out
+          objs2.messageB.style.transform = `translate3d(0, ${calcValues(
+            values2.messageB_translateY_out,
+            currentYOffset
+          )}%, 0)`;
+          objs2.messageB.style.opacity = `${calcValues(
+            values2.messageB_opacity_out,
+            currentYOffset
+          )}`;
+          objs2.pinB.style.transform = `scaleY(${calcValues(
+            values2.pinB_scaleY,
+            currentYOffset
+          )})`;
+        }
+
+        if (scrollRatio <= 0.83 && objs2?.messageC && objs2?.pinC) {
+          // in
+          objs2.messageC.style.transform = `translate3d(0, ${calcValues(
+            values2.messageC_translateY_in,
+            currentYOffset
+          )}%, 0)`;
+          objs2.messageC.style.opacity = `${calcValues(
+            values2.messageC_opacity_in,
+            currentYOffset
+          )}`;
+          objs2.pinC.style.transform = `scaleY(${calcValues(
+            values2.pinC_scaleY,
+            currentYOffset
+          )})`;
+        } else if (scrollRatio > 0.83 && objs2?.messageC && objs2?.pinC) {
+          // out
+          objs2.messageC.style.transform = `translate3d(0, ${calcValues(
+            values2.messageC_translateY_out,
+            currentYOffset
+          )}%, 0)`;
+          objs2.messageC.style.opacity = `${calcValues(
+            values2.messageC_opacity_out,
+            currentYOffset
+          )}`;
+          objs2.pinC.style.transform = `scaleY(${calcValues(
+            values2.pinC_scaleY,
+            currentYOffset
+          )})`;
+        }
+
+        break;
+      case 3:
+        break;
+    }
+  }
 
   function scrollLoop() {
     setScrollInfoValue((prev) => {
@@ -28,7 +247,9 @@ function AppleClone() {
         tempPrev += allSceneInfos[i].scrollHeight;
       };
       if (yOffsetValue > tempPrev + allSceneInfos[tempCurrentScene].scrollHeight) {
-        tempCurrentScene++;
+        if (tempCurrentScene < allSceneInfos.length - 1) {
+          tempCurrentScene++;
+        }
       }
 
       if (yOffsetValue < tempPrev) {
@@ -36,7 +257,7 @@ function AppleClone() {
         tempCurrentScene--;
       }
 
-      document.body.setAttribute('id', `show-scene-${tempCurrentScene}`)
+      document.body.setAttribute('id', `show-scene-${tempCurrentScene}`);
 
       const newArray = { currentScene: tempCurrentScene, prevScrollHeight: tempPrev };
 
@@ -44,16 +265,39 @@ function AppleClone() {
     })
   }
 
+  function controlEnterNewScene() {
+    setEnterNewSceneValue(() => {
+      return false;
+    });
+
+    if (window.scrollY > scrollInfoValue.prevScrollHeight + allSceneInfos[scrollInfoValue.currentScene].scrollHeight) {
+      setEnterNewSceneValue(() => {
+        return true;
+      });
+    }
+
+    if (window.scrollY < scrollInfoValue.prevScrollHeight) {
+      setEnterNewSceneValue(() => {
+        return true;
+      });
+    }
+  }
+
   useEffect(() => {
     if (sceneInfoAtomValue[1].scrollHeight) {
-      console.log(allSceneInfos);
       window.addEventListener("scroll", scrollLoop);
     }
   }, [window.scrollY, sceneInfoAtomValue]);
 
   useEffect(() => {
-    console.log(scrollInfoValue.currentScene, document.body.id);
-}, [scrollInfoValue]);
+    controlEnterNewScene();
+  }, [window.scrollY, scrollInfoValue]);
+
+  useEffect(() => {
+   if (!enterNewSceneValue) {
+    playAnimation();
+   }
+}, [scrollInfoValue, enterNewSceneValue]);
 
   return (
     <Container>

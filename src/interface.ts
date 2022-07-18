@@ -230,4 +230,9 @@ interface IScrollInfo {
 export const scrollInfo = atom<IScrollInfo>({
   key: "scrollInfo",
   default: { prevScrollHeight: 0, currentScene: 0 }
-})
+});
+
+export const enterNewScene = atom<boolean>({
+  key: "enterNewScene",
+  default: false,
+});
