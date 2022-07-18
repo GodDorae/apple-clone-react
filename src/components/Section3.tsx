@@ -66,9 +66,18 @@ function Section3() {
       };
       const messageArray = {
         canvasCaption: document.querySelector("#canvas-caption"),
-      }
+      };
+      const values = {
+        rect1X: [0, 0, { start: 0, end: 0 }],
+        rect2X: [0, 0, { start: 0, end: 0 }],
+        rectStartY: 0,
+        blendHeight: [0, 0, { start: 0, end: 0 }],
+        canvas_scale: [0, 0, { start: 0, end: 0 }],
+        canvasCaption_opacity: [0, 1, { start: 0, end: 0 }],
+        canvasCaption_translateY: [20, 0, { start: 0, end: 0 }],
+      };
       const updatedObj = { ...containerElement, ...messageArray };
-      const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
+      const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj, values };
       const before = prev.slice(0, sceneNumber);
       const after = prev.slice(sceneNumber + 1);
       const newArray = [...before, updatedSceneInfo, ...after];
