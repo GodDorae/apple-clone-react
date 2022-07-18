@@ -105,12 +105,18 @@ function Section2() {
 
   function setDOM() {
     setSceneInfos((prev) => {
-      const currentSceneObj = prev[sceneNumber].objs;
       const containerElementID = `scroll-section-${sceneNumber}`;
       const containerElement = {
         container: document.getElementById(containerElementID),
       };
-      const updatedObj = { ...currentSceneObj, ...containerElement };
+      const messageArray = {
+        messageA: document.querySelector(".section2-a"),
+        messageB: document.querySelector(".section2-b"),
+        messageC: document.querySelector(".section2-c"),
+        pinB: document.querySelector(".section2-b-pin"),
+        pinC: document.querySelector(".section2-c-pin"),
+      };
+      const updatedObj = { ...containerElement, ...messageArray };
       const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
       const before = prev.slice(0, sceneNumber);
       const after = prev.slice(sceneNumber + 1);
@@ -206,28 +212,28 @@ function Section2() {
 
   return (
     <Section ref={scrollSection2} height={height} id="scroll-section-2">
-      <MessageA id="section2-a" showScene={showScene}>
+      <MessageA className="section2-a" showScene={showScene}>
         <p>
           <small>편안한 촉감</small>
           입과 하나 되다
         </p>
       </MessageA>
-      <MessageB id="section2-b" showScene={showScene}>
+      <MessageB className="section2-b" showScene={showScene}>
         <p>
           편안한 목넘김을 완성하는 디테일한 여러 구성 요소들, 우리는 이를
           하나하나 새롭게 살피고 재구성하는 과정을 거쳐 새로운 수준의 머그,
           Airmug Pro를 만들었습니다. 입에 뭔가 댔다는 감각은 어디새 사라지고
           오롯이 당신과 음료만 남게 되죠.
         </p>
-        <Pin id="section2-b-pin"/>
+        <Pin className="section2-b-pin"/>
       </MessageB>
-      <MessageC id="section2-c" showScene={showScene}>
+      <MessageC className="section2-c" showScene={showScene}>
         <p>
           Design and quality of Sweden,
           <br />
           Made in China
         </p>
-        <Pin id="section2-c-pin"/>
+        <Pin className="section2-c-pin"/>
       </MessageC>
     </Section>
   );

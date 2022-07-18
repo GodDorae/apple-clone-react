@@ -43,6 +43,22 @@ function Section1() {
   const [allSceneInfos, setSceneInfos] = useRecoilState(sceneInfo);
   const currentSceneInfo = allSceneInfos[sceneNumber];
 
+  const setDOM = useCallback(() => {
+    setSceneInfos((prev) => {
+      const currentSceneObj = prev[sceneNumber].objs;
+      const containerElementID = `scroll-section-${sceneNumber}`;
+      const containerElement = {
+        container: document.getElementById(containerElementID),
+      };
+      const updatedObj = { ...currentSceneObj, ...containerElement };
+      const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
+      const before = prev.slice(0, sceneNumber);
+      const after = prev.slice(sceneNumber + 1);
+      const newArray = [...before, updatedSceneInfo, ...after];
+      return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
+    });
+  }, [allSceneInfos[sceneNumber].objs]);
+
   function setLayout() {
     if (allSceneInfos[sceneNumber].type === "sticky") {
       setSceneInfos((prev) => {
@@ -70,21 +86,6 @@ function Section1() {
     }
   }
 
-  const setDOM = useCallback(() => {
-    setSceneInfos((prev) => {
-      const currentSceneObj = prev[sceneNumber].objs;
-      const containerElementID = `scroll-section-${sceneNumber}`;
-      const containerElement = {
-        container: document.getElementById(containerElementID),
-      };
-      const updatedObj = { ...currentSceneObj, ...containerElement };
-      const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
-      const before = prev.slice(0, sceneNumber);
-      const after = prev.slice(sceneNumber + 1);
-      const newArray = [...before, updatedSceneInfo, ...after];
-      return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
-    });
-  }, [allSceneInfos[sceneNumber].objs]);
 
   useEffect(() => {
     if (document.readyState === "complete") {

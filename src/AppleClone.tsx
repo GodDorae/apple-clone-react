@@ -46,6 +46,7 @@ function AppleClone() {
 
   useEffect(() => {
     if (sceneInfoAtomValue[1].scrollHeight) {
+      console.log(allSceneInfos);
       window.addEventListener("scroll", scrollLoop);
     }
   }, [window.scrollY, sceneInfoAtomValue]);

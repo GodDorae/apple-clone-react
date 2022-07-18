@@ -86,12 +86,17 @@ function Section0() {
 
   function setDOM() {
     setSceneInfos((prev) => {
-      const currentSceneObj = prev[sceneNumber].objs;
       const containerElementID = `scroll-section-${sceneNumber}`;
       const containerElement = {
         container: document.getElementById(containerElementID),
       };
-      const updatedObj = { ...currentSceneObj, ...containerElement };
+      const messageArray = {
+        messageA: document.querySelector(".section0-a"),
+        messageB: document.querySelector(".section0-b"),
+        messageC: document.querySelector(".section0-c"),
+        messageD: document.querySelector(".section0-d"),
+      };
+      const updatedObj = {  ...containerElement, ...messageArray };
       const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
       const before = prev.slice(0, sceneNumber);
       const after = prev.slice(sceneNumber + 1);

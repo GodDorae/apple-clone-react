@@ -30,10 +30,10 @@ const sceneInfo0: ISceneInfo0 = {
   scrollHeight: 0,
   objs: {
     container: null,
-    messageA: document.querySelector("section0-a"),
-    messageB: document.querySelector("section0-b"),
-    messageC: document.querySelector("section0-c"),
-    messageD: document.querySelector("section0-d"),
+    messageA: null,
+    messageB: null,
+    messageC: null,
+    messageD: null,
   },
   values: {},
 };
@@ -67,11 +67,11 @@ const sceneInfo2: ISceneInfo2 = {
   scrollHeight: 0,
   objs: {
     container: null,
-    messageA: document.querySelector("section2-a"),
-    messageB: document.querySelector("section2-b"),
-    messageC: document.querySelector("section2-c"),
-    pinB: document.querySelector("section2-b-pin"),
-    pinC: document.querySelector("section2-c-pin"),
+    messageA: null,
+    messageB: null,
+    messageC: null,
+    pinB: null,
+    pinC: null,
   },
   values: {},
 };
@@ -91,7 +91,7 @@ const sceneInfo3: ISceneInfo3 = {
   scrollHeight: 0,
   objs: {
     container: null,
-    canvasCaption: document.querySelector("#canvas-caption"),
+    canvasCaption: null,
   },
   values: {},
 };

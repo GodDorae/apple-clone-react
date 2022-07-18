@@ -60,12 +60,14 @@ function Section3() {
 
   function setDOM() {
     setSceneInfos((prev) => {
-      const currentSceneObj = prev[sceneNumber].objs;
       const containerElementID = `scroll-section-${sceneNumber}`;
       const containerElement = {
         container: document.getElementById(containerElementID),
       };
-      const updatedObj = { ...currentSceneObj, ...containerElement };
+      const messageArray = {
+        canvasCaption: document.querySelector("#canvas-caption"),
+      }
+      const updatedObj = { ...containerElement, ...messageArray };
       const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
       const before = prev.slice(0, sceneNumber);
       const after = prev.slice(sceneNumber + 1);
