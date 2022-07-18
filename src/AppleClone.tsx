@@ -5,7 +5,7 @@ import Section0 from "./components/Section0";
 import Section1 from "./components/Section1";
 import Section2 from "./components/Section2";
 import Section3 from "./components/Section3";
-import { scrollInfo, initialSceneInfo, sceneInfo, enterNewScene } from "./interface";
+import { scrollInfo, initialSceneInfo, enterNewScene } from "./interface";
 import { useRecoilValue, useRecoilState } from "recoil";
 import { useCallback, useEffect } from "react";
 
@@ -15,7 +15,6 @@ const Container = styled.div`
 `;
 
 function AppleClone() {
-  const sceneInfoAtomValue = useRecoilValue(sceneInfo);
   const allSceneInfos = useRecoilValue(initialSceneInfo);
   const [scrollInfoValue, setScrollInfoValue] = useRecoilState(scrollInfo);
   const [enterNewSceneValue, setEnterNewSceneValue] = useRecoilState(enterNewScene);
