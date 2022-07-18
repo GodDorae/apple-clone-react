@@ -109,39 +109,15 @@ function Section2() {
       const containerElement = {
         container: document.getElementById(containerElementID),
       };
-      const messageArray = {
+      const messageObject = {
         messageA: document.querySelector(".section2-a"),
         messageB: document.querySelector(".section2-b"),
         messageC: document.querySelector(".section2-c"),
         pinB: document.querySelector(".section2-b-pin"),
         pinC: document.querySelector(".section2-c-pin"),
       };
-      const values = {
-        videoImageCount: 960,
-        imageSequence: [0, 959],
-        canvas_opacity_in: [0, 1, { start: 0, end: 0.1 }],
-        canvas_opacity_out: [1, 0, { start: 0.95, end: 1 }],
-        messageA_translateY_in: [20, 0, { start: 0.15, end: 0.2 }],
-        messageB_translateY_in: [30, 0, { start: 0.5, end: 0.55 }],
-        messageC_translateY_in: [30, 0, { start: 0.72, end: 0.77 }],
-        messageA_opacity_in: [0, 1, { start: 0.15, end: 0.2 }],
-        messageB_opacity_in: [0, 1, { start: 0.5, end: 0.55 }],
-        messageC_opacity_in: [0, 1, { start: 0.72, end: 0.77 }],
-        messageA_translateY_out: [0, -20, { start: 0.3, end: 0.35 }],
-        messageB_translateY_out: [0, -20, { start: 0.58, end: 0.63 }],
-        messageC_translateY_out: [0, -20, { start: 0.85, end: 0.9 }],
-        messageA_opacity_out: [1, 0, { start: 0.3, end: 0.35 }],
-        messageB_opacity_out: [1, 0, { start: 0.58, end: 0.63 }],
-        messageC_opacity_out: [1, 0, { start: 0.85, end: 0.9 }],
-        pinB_scaleY: [0.5, 1, { start: 0.5, end: 0.55 }],
-        pinC_scaleY: [0.5, 1, { start: 0.72, end: 0.77 }],
-        pinB_opacity_in: [0, 1, { start: 0.5, end: 0.55 }],
-        pinC_opacity_in: [0, 1, { start: 0.72, end: 0.77 }],
-        pinB_opacity_out: [1, 0, { start: 0.58, end: 0.63 }],
-        pinC_opacity_out: [1, 0, { start: 0.85, end: 0.9 }],
-      };
-      const updatedObj = { ...containerElement, ...messageArray };
-      const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj, values };
+      const updatedObj = { ...containerElement, ...messageObject };
+      const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
       const before = prev.slice(0, sceneNumber);
       const after = prev.slice(sceneNumber + 1);
       const newArray = [...before, updatedSceneInfo, ...after];
