@@ -7,7 +7,7 @@ import Section2 from "./components/Section2";
 import Section3 from "./components/Section3";
 import { scrollInfo, initialSceneInfo, sceneInfo, enterNewScene } from "./interface";
 import { useRecoilValue, useRecoilState } from "recoil";
-import { useEffect } from "react";
+import { useCallback, useEffect } from "react";
 
 
 const Container = styled.div`
@@ -50,7 +50,7 @@ function AppleClone() {
     return rv;
   }
 
-  function playAnimation() {
+  const playAnimation = useCallback(() => {
     const currentYOffset = window.scrollY - scrollInfoValue.prevScrollHeight;
     const scrollRatio = currentYOffset / allSceneInfos[scrollInfoValue.currentScene].scrollHeight;
 
@@ -236,9 +236,9 @@ function AppleClone() {
       case 3:
         break;
     }
-  }
+  }, [scrollInfoValue]);
 
-  function scrollLoop() {
+  const scrollLoop = useCallback(() => {
     setScrollInfoValue((prev) => {
       const yOffsetValue = window.scrollY;
       let tempCurrentScene = prev.currentScene;
@@ -263,9 +263,9 @@ function AppleClone() {
 
       return newArray;
     })
-  }
+  }, [window.scrollY, allSceneInfos]);
 
-  function controlEnterNewScene() {
+  const controlEnterNewScene = useCallback(() => {
     setEnterNewSceneValue(() => {
       return false;
     });
@@ -281,23 +281,19 @@ function AppleClone() {
         return true;
       });
     }
-  }
+  }, [scrollInfoValue]);
 
   useEffect(() => {
-    if (sceneInfoAtomValue[1].scrollHeight) {
+    if (allSceneInfos[1].scrollHeight) {
       window.addEventListener("scroll", scrollLoop);
+
+      controlEnterNewScene();
+
+      if (!enterNewSceneValue) {
+        playAnimation();
+       }
     }
-  }, [window.scrollY, sceneInfoAtomValue]);
-
-  useEffect(() => {
-    controlEnterNewScene();
-  }, [window.scrollY, scrollInfoValue]);
-
-  useEffect(() => {
-   if (!enterNewSceneValue) {
-    playAnimation();
-   }
-}, [scrollInfoValue, enterNewSceneValue]);
+  }, [scrollLoop]);
 
   return (
     <Container>
