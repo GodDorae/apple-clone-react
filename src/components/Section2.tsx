@@ -8,7 +8,7 @@ import {
   sceneInfo,
   scrollInfo
 } from "../interface";
-import { useRecoilState, useRecoilValue } from "recoil";
+import { useRecoilState } from "recoil";
 
 const Section = styled.section< { height: string } >`
   height: ${(props) => props.height};
@@ -101,7 +101,23 @@ function Section2() {
   const [height, setHeight] = useState(
     `${currentSceneInfo.heightNum * window.innerHeight}px`
   );
-  const scrollInfoValue = useRecoilValue(scrollInfo);
+  const [scrollInfoValue, setScrollInfoValue] = useRecoilState(scrollInfo);
+
+  function setDOM() {
+    setSceneInfos((prev) => {
+      const currentSceneObj = prev[sceneNumber].objs;
+      const containerElementID = `scroll-section-${sceneNumber}`;
+      const containerElement = {
+        container: document.getElementById(containerElementID),
+      };
+      const updatedObj = { ...currentSceneObj, ...containerElement };
+      const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
+      const before = prev.slice(0, sceneNumber);
+      const after = prev.slice(sceneNumber + 1);
+      const newArray = [...before, updatedSceneInfo, ...after];
+      return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
+    });
+  }
 
   function setLayout() {
     if (allSceneInfos[sceneNumber].type === "sticky") {
@@ -130,20 +146,20 @@ function Section2() {
     }
   }
 
-  function setDOM() {
-    setSceneInfos((prev) => {
-      const currentSceneObj = prev[sceneNumber].objs;
-      const containerElementID = `scroll-section-${sceneNumber}`;
-      const containerElement = {
-        container: document.getElementById(containerElementID),
-      };
-      const updatedObj = { ...currentSceneObj, ...containerElement };
-      const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
-      const before = prev.slice(0, sceneNumber);
-      const after = prev.slice(sceneNumber + 1);
-      const newArray = [...before, updatedSceneInfo, ...after];
-      return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
-    });
+  function setCurrentScene() {
+    let totalScrollHeight = 0;
+    for (let i = 0; i < allSceneInfos.length; i++) {
+      totalScrollHeight += allSceneInfos[i].scrollHeight;
+      if (totalScrollHeight >= window.scrollY) {
+        setScrollInfoValue((prev) => {
+          const newArray = {...prev, currentScene: i};
+          return newArray;
+        });
+        break;
+      }
+    }
+
+    document.body.setAttribute("id", `show-scene-${scrollInfoValue.currentScene}`);
   }
 
   useEffect(() => {
@@ -170,6 +186,12 @@ function Section2() {
 
   useEffect(() => {
     if (allSceneInfos[1].scrollHeight) {
+      setCurrentScene();
+    }
+  }, [allSceneInfos, window.scrollY]);
+
+  useEffect(() => {
+    if (allSceneInfos[1].scrollHeight) {
       if (document.body.id === "show-scene-2") {
         setShowScene(() => {
           return true;
@@ -180,7 +202,7 @@ function Section2() {
         })
       }
     }
-  }, [allSceneInfos, scrollInfoValue]);
+  }, [allSceneInfos, document.body.id]);
 
   return (
     <Section ref={scrollSection2} height={height} id="scroll-section-2">
