@@ -5,23 +5,57 @@ import Section0 from "./components/Section0";
 import Section1 from "./components/Section1";
 import Section2 from "./components/Section2";
 import Section3 from "./components/Section3";
-import { scrollInfo, initialSceneInfo, enterNewScene } from "./interface";
-import { useRecoilValue, useRecoilState } from "recoil";
+import {
+  ISceneInfo,
+  ISceneInfo0,
+  ISceneInfo2,
+  ISceneInfo3,
+  scrollInfo,
+  initialSceneInfo,
+  enterNewScene,
+} from "./interface";
+import { useRecoilState } from "recoil";
 import { useCallback, useEffect } from "react";
-
 
 const Container = styled.div`
   overflow-x: hidden;
 `;
 
 function AppleClone() {
-  const allSceneInfos = useRecoilValue(initialSceneInfo);
+  const [allSceneInfos, setAllSceneInfos] = useRecoilState(initialSceneInfo);
   const [scrollInfoValue, setScrollInfoValue] = useRecoilState(scrollInfo);
-  const [enterNewSceneValue, setEnterNewSceneValue] = useRecoilState(enterNewScene);
+  const [enterNewSceneValue, setEnterNewSceneValue] =
+    useRecoilState(enterNewScene);
 
-  function calcValues(values: [number, number, { start: number, end: number }], currentYOffset: number) {
+  function setCanvasImages() {
+    let imgElem, imgElem2, imgElem3;
+    let array1 = [] as Array<HTMLImageElement>;
+    let array2 = [] as Array<HTMLImageElement>;
+    let array3 = [] as Array<HTMLImageElement>;
+
+    for (let i = 0; i < allSceneInfos[0].values.videoImageCount; i++) {
+      imgElem = document.createElement('img');
+      imgElem.src = `/assets/video/001/IMG_${6726 + i}.JPG`;
+      array1.push(imgElem);
+    }
+    setAllSceneInfos((prev) => {
+      const objs = { ...prev[0].objs };
+      const newObjs = { ...objs, videoImages: array1 };
+      const updatedSceneInfo = { ...prev[0], objs: newObjs };
+      const after = prev.slice(1);
+      const newArray = [updatedSceneInfo, ...after];
+
+      return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
+    });
+  }
+
+  function calcValues(
+    values: [number, number, { start: number; end: number }],
+    currentYOffset: number
+  ) {
     let rv;
-    const scrollHeight = allSceneInfos[scrollInfoValue.currentScene].scrollHeight;
+    const scrollHeight =
+      allSceneInfos[scrollInfoValue.currentScene].scrollHeight;
     const scrollRatio = currentYOffset / scrollHeight;
 
     if (values.length === 3) {
@@ -51,7 +85,8 @@ function AppleClone() {
 
   const playAnimation = useCallback(() => {
     const currentYOffset = window.scrollY - scrollInfoValue.prevScrollHeight;
-    const scrollRatio = currentYOffset / allSceneInfos[scrollInfoValue.currentScene].scrollHeight;
+    const scrollRatio =
+      currentYOffset / allSceneInfos[scrollInfoValue.currentScene].scrollHeight;
 
     switch (scrollInfoValue.currentScene) {
       case 0:
@@ -244,8 +279,11 @@ function AppleClone() {
       let tempPrev = 0;
       for (let i = 0; i < tempCurrentScene; i++) {
         tempPrev += allSceneInfos[i].scrollHeight;
-      };
-      if (yOffsetValue > tempPrev + allSceneInfos[tempCurrentScene].scrollHeight) {
+      }
+      if (
+        yOffsetValue >
+        tempPrev + allSceneInfos[tempCurrentScene].scrollHeight
+      ) {
         if (tempCurrentScene < allSceneInfos.length - 1) {
           tempCurrentScene++;
         }
@@ -256,12 +294,15 @@ function AppleClone() {
         tempCurrentScene--;
       }
 
-      document.body.setAttribute('id', `show-scene-${tempCurrentScene}`);
+      document.body.setAttribute("id", `show-scene-${tempCurrentScene}`);
 
-      const newArray = { currentScene: tempCurrentScene, prevScrollHeight: tempPrev };
+      const newArray = {
+        currentScene: tempCurrentScene,
+        prevScrollHeight: tempPrev,
+      };
 
       return newArray;
-    })
+    });
   }, [window.scrollY, allSceneInfos]);
 
   const controlEnterNewScene = useCallback(() => {
@@ -269,7 +310,11 @@ function AppleClone() {
       return false;
     });
 
-    if (window.scrollY > scrollInfoValue.prevScrollHeight + allSceneInfos[scrollInfoValue.currentScene].scrollHeight) {
+    if (
+      window.scrollY >
+      scrollInfoValue.prevScrollHeight +
+        allSceneInfos[scrollInfoValue.currentScene].scrollHeight
+    ) {
       setEnterNewSceneValue(() => {
         return true;
       });
@@ -283,6 +328,12 @@ function AppleClone() {
   }, [scrollInfoValue]);
 
   useEffect(() => {
+    setCanvasImages();
+
+    console.log(allSceneInfos);
+  }, []);
+
+  useEffect(() => {
     if (allSceneInfos[1].scrollHeight) {
       window.addEventListener("scroll", scrollLoop);
 
@@ -290,7 +341,7 @@ function AppleClone() {
 
       if (!enterNewSceneValue) {
         playAnimation();
-       }
+      }
     }
   }, [scrollLoop]);
 

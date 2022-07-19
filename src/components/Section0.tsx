@@ -48,6 +48,21 @@ const MainMessage = styled.div`
   }
 `;
 
+const Canvas = styled.div<{ showScene: boolean }>`
+  display: ${(props) => (props.showScene ? "block" : "none")};
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+
+  & > canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+  }
+`;
+
 const MainMessageA = styled(MainMessage)<{ showScene: boolean }>`
   display: ${(props) => (props.showScene ? "block" : "none")};
   position: fixed;
@@ -77,6 +92,7 @@ function Section0() {
   const sceneNumber = 0;
   const [showScene, setShowScene] = useState(false);
   const scrollSection0 = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [allSceneInfos, setSceneInfos] = useRecoilState(sceneInfo);
   const currentSceneInfo = allSceneInfos[sceneNumber];
   const [height, setHeight] = useState(
@@ -95,8 +111,10 @@ function Section0() {
         messageB: document.querySelector(".section0-b"),
         messageC: document.querySelector(".section0-c"),
         messageD: document.querySelector(".section0-d"),
+        canvas: canvasRef.current,
+        context: canvasRef.current?.getContext("2d"),
       };
-      const updatedObj = {  ...containerElement, ...messageObject };
+      const updatedObj = {  ...containerElement, ...messageObject, videoImages: [] };
       const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
       const before = prev.slice(0, sceneNumber);
       const after = prev.slice(sceneNumber + 1);
@@ -193,6 +211,9 @@ function Section0() {
   return (
     <Section ref={scrollSection0} height={height} id="scroll-section-0">
       <Title>Airmug Pro</Title>
+      <Canvas showScene={showScene}>
+        <canvas id="video-canvas-0" ref={canvasRef} width="1920" height="1080"></canvas>
+      </Canvas>
       <MainMessageA className="section0-a" showScene={showScene}>
         <p>
           온전히 빠져들게 하는

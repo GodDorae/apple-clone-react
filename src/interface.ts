@@ -17,6 +17,9 @@ interface IObjs0 extends IObjs {
   messageB: HTMLDivElement | null;
   messageC: HTMLDivElement | null;
   messageD: HTMLDivElement | null;
+  canvas: HTMLCanvasElement | null;
+  context: any;
+  videoImages: Array<HTMLImageElement>;
 }
 
 interface IValues0 {
@@ -56,6 +59,9 @@ const sceneInfo0: ISceneInfo0 = {
     messageB: null,
     messageC: null,
     messageD: null,
+    canvas: null,
+    context: null,
+    videoImages: [],
   },
   values: {
     videoImageCount: 300,
