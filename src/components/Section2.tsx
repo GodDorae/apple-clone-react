@@ -156,6 +156,11 @@ function Section2() {
         const newArray = [...before, updatedSceneInfo, ...after];
         return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
       });
+
+      const heightRatio = window.innerHeight / 1080;
+      if (allSceneInfos[sceneNumber].objs.canvas) {
+        allSceneInfos[sceneNumber].objs.canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${heightRatio})`;
+      }
     } else if (allSceneInfos[sceneNumber].type === "normal") {
       setSceneInfos((prev) => {
         const offsetHeight = currentSceneInfo.objs.container

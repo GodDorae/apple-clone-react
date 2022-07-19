@@ -123,6 +123,14 @@ function AppleClone() {
       case 0:
         const objs0 = allSceneInfos[0].objs;
         const values0 = allSceneInfos[0].values;
+
+        if (objs0?.canvas) {
+          objs0.canvas.style.opacity = `${calcValues(
+            values0.canvas_opacity,
+            currentYOffset
+          )}`;
+        }
+
         if (scrollRatio <= 0.22 && objs0?.messageA) {
           // in
           objs0.messageA.style.opacity = `${calcValues(
