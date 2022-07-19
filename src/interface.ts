@@ -24,7 +24,7 @@ interface IObjs0 extends IObjs {
 
 interface IValues0 {
   videoImageCount: number,
-  imageSequence: Array<number>,
+  imageSequence: [number, number],
   canvas_opacity: [number, number, { start: number, end: number }],
   messageA_opacity_in: [number, number, { start: number, end: number }],
   messageB_opacity_in: [number, number, { start: number, end: number }],

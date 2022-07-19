@@ -81,7 +81,7 @@ function AppleClone() {
   }
 
   function calcValues(
-    values: [number, number, { start: number; end: number }],
+    values: [number, number, { start: number; end: number }] | [number, number],
     currentYOffset: number
   ) {
     let rv;
