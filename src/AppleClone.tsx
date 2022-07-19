@@ -47,6 +47,37 @@ function AppleClone() {
 
       return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
     });
+
+    for (let i = 0; i < allSceneInfos[2].values.videoImageCount; i++) {
+      imgElem2 = document.createElement('img');
+      imgElem2.src = `/assets/video/002/IMG_${7027 + i}.JPG`;
+      array2.push(imgElem2);
+    }
+    setAllSceneInfos((prev) => {
+      const objs = { ...prev[2].objs };
+      const newObjs = { ...objs, videoImages: array2 };
+      const updatedSceneInfo = { ...prev[2], objs: newObjs };
+      const before = prev.slice(0, 2);
+      const after = prev.slice(3);
+      const newArray = [...before, updatedSceneInfo, ...after];
+
+      return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
+    });
+
+    for (let i = 0; i < allSceneInfos[3].objs.imagesPath.length; i++) {
+      imgElem3 = document.createElement('img');
+      imgElem3.src = allSceneInfos[3].objs.imagesPath[i];
+      array3.push(imgElem3);
+    }
+    setAllSceneInfos((prev) => {
+      const objs = { ...prev[3].objs };
+      const newObjs = { ...objs, images: array3 };
+      const updatedSceneInfo = { ...prev[3], objs: newObjs };
+      const before = prev.slice(0, 3);
+      const newArray = [...before, updatedSceneInfo];
+
+      return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
+    })
   }
 
   function calcValues(
@@ -329,12 +360,12 @@ function AppleClone() {
 
   useEffect(() => {
     setCanvasImages();
-
-    console.log(allSceneInfos);
   }, []);
 
   useEffect(() => {
     if (allSceneInfos[1].scrollHeight) {
+      console.log(allSceneInfos);
+
       window.addEventListener("scroll", scrollLoop);
 
       controlEnterNewScene();

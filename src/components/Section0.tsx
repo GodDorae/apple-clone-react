@@ -106,7 +106,7 @@ function Section0() {
       const containerElement = {
         container: document.getElementById(containerElementID),
       };
-      const messageObject = {
+      const messageObj = {
         messageA: document.querySelector(".section0-a"),
         messageB: document.querySelector(".section0-b"),
         messageC: document.querySelector(".section0-c"),
@@ -114,7 +114,8 @@ function Section0() {
         canvas: canvasRef.current,
         context: canvasRef.current?.getContext("2d"),
       };
-      const updatedObj = {  ...containerElement, ...messageObject, videoImages: [] };
+      const originalObj = { ...prev[sceneNumber].objs }
+      const updatedObj = {  ...originalObj, ...containerElement, ...messageObj };
       const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
       const before = prev.slice(0, sceneNumber);
       const after = prev.slice(sceneNumber + 1);

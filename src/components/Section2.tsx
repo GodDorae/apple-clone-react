@@ -6,11 +6,11 @@ import {
   ISceneInfo2,
   ISceneInfo3,
   sceneInfo,
-  scrollInfo
+  scrollInfo,
 } from "../interface";
 import { useRecoilState } from "recoil";
 
-const Section = styled.section< { height: string } >`
+const Section = styled.section<{ height: string }>`
   height: ${(props) => props.height};
   padding-top: 50vh;
 `;
@@ -43,6 +43,21 @@ const MainMessage = styled.div`
     @media screen and (min-width: 1024px) {
       font-size: 1.5vw;
     }
+  }
+`;
+
+const Canvas = styled.div<{ showScene: boolean }>`
+  display: ${(props) => (props.showScene ? "block" : "none")};
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+
+  & > canvas {
+    position: absolute;
+    top: 50%;
+    left: 50%;
   }
 `;
 
@@ -96,6 +111,7 @@ function Section2() {
   const sceneNumber = 2;
   const [showScene, setShowScene] = useState(false);
   const scrollSection2 = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [allSceneInfos, setSceneInfos] = useRecoilState(sceneInfo);
   const currentSceneInfo = allSceneInfos[sceneNumber];
   const [height, setHeight] = useState(
@@ -109,14 +125,17 @@ function Section2() {
       const containerElement = {
         container: document.getElementById(containerElementID),
       };
-      const messageObject = {
+      const messageObj = {
         messageA: document.querySelector(".section2-a"),
         messageB: document.querySelector(".section2-b"),
         messageC: document.querySelector(".section2-c"),
         pinB: document.querySelector(".section2-b-pin"),
         pinC: document.querySelector(".section2-c-pin"),
+        canvas: canvasRef.current,
+        context: canvasRef.current?.getContext("2d"),
       };
-      const updatedObj = { ...containerElement, ...messageObject };
+      const originalObj = { ...prev[sceneNumber].objs }
+      const updatedObj = {  ...originalObj, ...containerElement, ...messageObj };
       const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
       const before = prev.slice(0, sceneNumber);
       const after = prev.slice(sceneNumber + 1);
@@ -158,14 +177,17 @@ function Section2() {
       totalScrollHeight += allSceneInfos[i].scrollHeight;
       if (totalScrollHeight >= window.scrollY) {
         setScrollInfoValue((prev) => {
-          const newArray = {...prev, currentScene: i};
+          const newArray = { ...prev, currentScene: i };
           return newArray;
         });
         break;
       }
     }
 
-    document.body.setAttribute("id", `show-scene-${scrollInfoValue.currentScene}`);
+    document.body.setAttribute(
+      "id",
+      `show-scene-${scrollInfoValue.currentScene}`
+    );
   }
 
   useEffect(() => {
@@ -201,17 +223,25 @@ function Section2() {
       if (document.body.id === "show-scene-2") {
         setShowScene(() => {
           return true;
-        })
+        });
       } else {
         setShowScene(() => {
           return false;
-        })
+        });
       }
     }
   }, [allSceneInfos, document.body.id]);
 
   return (
     <Section ref={scrollSection2} height={height} id="scroll-section-2">
+      <Canvas showScene={showScene}>
+        <canvas
+          id="video-canvas-0"
+          ref={canvasRef}
+          width="1920"
+          height="1080"
+        ></canvas>
+      </Canvas>
       <MessageA className="section2-a" showScene={showScene}>
         <p>
           <small>편안한 촉감</small>
@@ -220,12 +250,14 @@ function Section2() {
       </MessageA>
       <MessageB className="section2-b" showScene={showScene}>
         <p>
-          편안한 목넘김을 완성하는 디테일한 여러 구성 요소들, <br/>우리는 이를
-          하나하나 새롭게 살피고 재구성하는 과정을 거쳐 새로운 수준의 머그, <br/>
-          Airmug Pro를 만들었습니다. <br/> 입에 뭔가 댔다는 감각은 어디새 사라지고 <br/>
+          편안한 목넘김을 완성하는 디테일한 여러 구성 요소들, <br />
+          우리는 이를 하나하나 새롭게 살피고 재구성하는 과정을 거쳐 새로운
+          수준의 머그, <br />
+          Airmug Pro를 만들었습니다. <br /> 입에 뭔가 댔다는 감각은 어디새
+          사라지고 <br />
           오롯이 당신과 음료만 남게 되죠.
         </p>
-        <Pin className="section2-b-pin"/>
+        <Pin className="section2-b-pin" />
       </MessageB>
       <MessageC className="section2-c" showScene={showScene}>
         <p>
@@ -233,7 +265,7 @@ function Section2() {
           <br />
           Made in China
         </p>
-        <Pin className="section2-c-pin"/>
+        <Pin className="section2-c-pin" />
       </MessageC>
     </Section>
   );

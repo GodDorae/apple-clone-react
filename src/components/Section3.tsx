@@ -15,6 +15,11 @@ const Section = styled.section< { height: string } >`
   padding-top: 50vh;
 `;
 
+const Canvas = styled.canvas<{ sticky: boolean }>`
+  position: ${(props) => (props.sticky ? "fixed" : "static")};
+  top: ${(props) => (props.sticky ? 0 : "auto")};
+`;
+
 const MidMessage = styled.p`
   max-width: 1000px;
   margin: 0 auto;
@@ -49,8 +54,9 @@ const CanvasCaption = styled.p`
 
 function Section3() {
   const sceneNumber = 3;
-  const [showScene, setShowScene] = useState(false);
+  const [sticky, setSticky] = useState(false);
   const scrollSection3 = useRef<HTMLElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
   const [allSceneInfos, setSceneInfos] = useRecoilState(sceneInfo);
   const currentSceneInfo = allSceneInfos[sceneNumber];
   const [height, setHeight] = useState(
@@ -64,10 +70,13 @@ function Section3() {
       const containerElement = {
         container: document.getElementById(containerElementID),
       };
-      const messageObject = {
+      const messageObj = {
         canvasCaption: document.querySelector("#canvas-caption"),
+        canvas: canvasRef.current,
+        context: canvasRef.current?.getContext("2d"),
       };
-      const updatedObj = { ...containerElement, ...messageObject };
+      const originalObj = { ...prev[sceneNumber].objs }
+      const updatedObj = {  ...originalObj, ...containerElement, ...messageObj };
       const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
       const before = prev.slice(0, sceneNumber);
       const after = prev.slice(sceneNumber + 1);
@@ -147,20 +156,6 @@ function Section3() {
     }
   }, [allSceneInfos, window.scrollY]);
 
-  useEffect(() => {
-    if (allSceneInfos[1].scrollHeight) {
-      if (document.body.id === "show-scene-3") {
-        setShowScene(() => {
-          return true;
-        })
-      } else {
-        setShowScene(() => {
-          return false;
-        })
-      }
-    }
-  }, [allSceneInfos, document.body.id]);
-
   return (
     <Section ref={scrollSection3} height={height} id="scroll-section-3">
       <MidMessage>
@@ -170,6 +165,7 @@ function Section3() {
         <br />
         아름답고 부드러운 음료 공간.
       </MidMessage>
+      <Canvas width="1920" height="1080" sticky={sticky} ref={canvasRef}></Canvas>
       <CanvasCaption id="canvas-caption">
         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus
         dicta nulla libero consequuntur officia nesciunt veniam quidem magni

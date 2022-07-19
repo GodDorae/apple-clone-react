@@ -102,6 +102,9 @@ interface IObjs2 extends IObjs {
   messageC: HTMLDivElement | null;
   pinB: HTMLDivElement | null;
   pinC: HTMLDivElement | null;
+  canvas: HTMLCanvasElement | null;
+  context: any;
+  videoImages: Array<HTMLImageElement>;
 }
 
 interface IValues2 {
@@ -145,6 +148,9 @@ const sceneInfo2: ISceneInfo2 = {
     messageC: null,
     pinB: null,
     pinC: null,
+    canvas: null,
+    context: null,
+    videoImages: [],
   },
   values: {
     videoImageCount: 960,
@@ -174,6 +180,10 @@ const sceneInfo2: ISceneInfo2 = {
 
 interface IObjs3 extends IObjs {
   canvasCaption: HTMLDivElement | null;
+  canvas: HTMLCanvasElement | null;
+  context: any;
+  imagesPath: Array<string>;
+  images: Array<HTMLImageElement>;
 }
 
 interface IValues3 {
@@ -198,6 +208,13 @@ const sceneInfo3: ISceneInfo3 = {
   objs: {
     container: null,
     canvasCaption: null,
+    canvas: null,
+    context: null,
+    imagesPath: [
+      "/assets/images/blend-image-1.jpg",
+      "/assets/images/blend-image-2.jpg",
+    ],
+    images: [],
   },
   values: {
     rect1X: [0, 0, { start: 0, end: 0 }],
