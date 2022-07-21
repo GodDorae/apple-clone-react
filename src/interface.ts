@@ -109,7 +109,7 @@ interface IObjs2 extends IObjs {
 
 interface IValues2 {
   videoImageCount: number,
-  imageSequence: Array<number>,
+  imageSequence: [number, number],
   canvas_opacity_in: [number, number, { start: number, end: number }],
   canvas_opacity_out: [number, number, { start: number, end: number }],
   messageA_translateY_in: [number, number, { start: number, end: number }],
@@ -253,9 +253,4 @@ interface IScrollInfo {
 export const scrollInfo = atom<IScrollInfo>({
   key: "scrollInfo",
   default: { prevScrollHeight: 0, currentScene: 0 }
-});
-
-export const enterNewScene = atom<boolean>({
-  key: "enterNewScene",
-  default: false,
 });

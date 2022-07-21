@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import {
   ISceneInfo,
   ISceneInfo0,
@@ -119,7 +119,7 @@ function Section2() {
   );
   const [scrollInfoValue, setScrollInfoValue] = useRecoilState(scrollInfo);
 
-  function setDOM() {
+  const setDOM = useCallback(() => {
     setSceneInfos((prev) => {
       const containerElementID = `scroll-section-${sceneNumber}`;
       const containerElement = {
@@ -142,7 +142,7 @@ function Section2() {
       const newArray = [...before, updatedSceneInfo, ...after];
       return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
     });
-  }
+  }, [allSceneInfos[sceneNumber].objs]);
 
   function setLayout() {
     if (allSceneInfos[sceneNumber].type === "sticky") {
@@ -202,8 +202,6 @@ function Section2() {
       });
 
       setDOM();
-
-      setLayout();
     }
 
     window.addEventListener("resize", () => {
@@ -212,10 +210,12 @@ function Section2() {
       });
 
       setDOM();
-
-      setLayout();
     });
   }, []);
+
+  useEffect(() => {
+    setLayout();
+  }, [setDOM]);
 
   useEffect(() => {
     if (allSceneInfos[1].scrollHeight) {
