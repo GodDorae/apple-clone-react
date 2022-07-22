@@ -249,7 +249,7 @@ function Section2() {
       </Canvas>
       <MessageA className="section2-a" showScene={showScene}>
         <p>
-          <small>편안한 촉감</small>
+          <small>편안한 촉감</small> <br/>
           입과 하나 되다
         </p>
       </MessageA>

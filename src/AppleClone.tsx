@@ -111,6 +111,39 @@ function AppleClone() {
     return rv;
   }
 
+  const scrollLoop = useCallback(() => {
+    setScrollInfoValue((prev) => {
+      const yOffsetValue = window.scrollY;
+      let tempCurrentScene = prev.currentScene;
+      let tempPrev = 0;
+      for (let i = 0; i < tempCurrentScene; i++) {
+        tempPrev += allSceneInfos[i].scrollHeight;
+      }
+      if (
+        yOffsetValue >
+        tempPrev + allSceneInfos[tempCurrentScene].scrollHeight
+      ) {
+        if (tempCurrentScene < allSceneInfos.length - 1) {
+          tempCurrentScene++;
+        }
+      }
+
+      if (yOffsetValue < tempPrev) {
+        if (tempCurrentScene === 0) return prev;
+        tempCurrentScene--;
+      }
+
+      document.body.setAttribute("id", `show-scene-${tempCurrentScene}`);
+
+      const newArray = {
+        currentScene: tempCurrentScene,
+        prevScrollHeight: tempPrev,
+      };
+
+      return newArray;
+    });
+  }, [window.scrollY, allSceneInfos, scrollInfoValue.currentScene]);
+
   const playAnimation = useCallback(() => {
     const currentYOffset = window.scrollY - scrollInfoValue.prevScrollHeight;
     const scrollRatio =
@@ -122,7 +155,7 @@ function AppleClone() {
         const values0 = allSceneInfos[0].values;
 
         const calculation0= calcValues(values0.imageSequence, currentYOffset);
-        if (calculation0 && calculation0!== Infinity && calculation0> 0) {
+        if (calculation0 && calculation0!== Infinity && calculation0 >= 0 && calculation0 <= 299) {
           objs0.context.drawImage(objs0.videoImages[Math.round(calculation0)], 0, 0);
         }
 
@@ -224,9 +257,9 @@ function AppleClone() {
       case 2:
         const objs2 = allSceneInfos[2].objs;
         const values2 = allSceneInfos[2].values;
-
+        console.log(window.scrollY, scrollInfoValue.prevScrollHeight, currentYOffset);
         const calculation2 = calcValues(values2.imageSequence, currentYOffset);
-        if (calculation2 && calculation2 !== Infinity && calculation2 > 0) {
+        if (calculation2 && calculation2 !== Infinity && calculation2 >= 0 && calculation2 <= 959) {
           objs2.context.drawImage(objs2.videoImages[Math.round(calculation2)], 0, 0);
         }
 
@@ -328,42 +361,7 @@ function AppleClone() {
       case 3:
         break;
     }
-  }, [window.scrollY, allSceneInfos, scrollInfoValue]);
-
-  const scrollLoop = useCallback(() => {
-    setScrollInfoValue((prev) => {
-      const yOffsetValue = window.scrollY;
-      let tempCurrentScene = prev.currentScene;
-      let tempPrev = 0;
-      for (let i = 0; i < tempCurrentScene; i++) {
-        tempPrev += allSceneInfos[i].scrollHeight;
-      }
-      if (
-        yOffsetValue >
-        tempPrev + allSceneInfos[tempCurrentScene].scrollHeight
-      ) {
-        if (tempCurrentScene < allSceneInfos.length - 1) {
-          tempCurrentScene++;
-        }
-      }
-
-      if (yOffsetValue < tempPrev) {
-        if (tempCurrentScene === 0) return prev;
-        tempCurrentScene--;
-      }
-
-      document.body.setAttribute("id", `show-scene-${tempCurrentScene}`);
-
-      const newArray = {
-        currentScene: tempCurrentScene,
-        prevScrollHeight: tempPrev,
-      };
-
-      return newArray;
-    });
-
-    playAnimation();
-  }, [window.scrollY, allSceneInfos]);
+  }, [scrollLoop]);
 
   useEffect(() => {
     setCanvasImages();
@@ -372,8 +370,10 @@ function AppleClone() {
   useEffect(() => {
     if (allSceneInfos[1].scrollHeight) {
       window.addEventListener("scroll", scrollLoop);
+
+      playAnimation();
     }
-  }, [window.scrollY, allSceneInfos, scrollInfoValue]);
+  }, [window.scrollY, allSceneInfos, scrollInfoValue.currentScene]);
 
   return (
     <Container>
