@@ -15,9 +15,14 @@ const Section = styled.section< { height: string } >`
   padding-top: 50vh;
 `;
 
-const Canvas = styled.canvas<{ sticky: boolean }>`
-  position: ${(props) => (props.sticky ? "fixed" : "static")};
-  top: ${(props) => (props.sticky ? 0 : "auto")};
+const Canvas = styled.canvas`
+  position: static;
+  top: auto;
+
+  &.sticky {
+    position: fixed;
+    top: 0;
+  }
 `;
 
 const MidMessage = styled.p`
@@ -165,7 +170,7 @@ function Section3() {
         <br />
         아름답고 부드러운 음료 공간.
       </MidMessage>
-      <Canvas width="1920" height="1080" sticky={sticky} ref={canvasRef}></Canvas>
+      <Canvas width="1920" height="1080" className="sticky" ref={canvasRef}></Canvas>
       <CanvasCaption id="canvas-caption">
         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus
         dicta nulla libero consequuntur officia nesciunt veniam quidem magni
