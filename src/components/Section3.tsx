@@ -59,7 +59,6 @@ const CanvasCaption = styled.p`
 
 function Section3() {
   const sceneNumber = 3;
-  const [sticky, setSticky] = useState(false);
   const scrollSection3 = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [allSceneInfos, setSceneInfos] = useRecoilState(sceneInfo);
@@ -67,7 +66,6 @@ function Section3() {
   const [height, setHeight] = useState(
     `${currentSceneInfo.heightNum * window.innerHeight}px`
   );
-  const [scrollInfoValue, setScrollInfoValue] = useRecoilState(scrollInfo);
 
   function setDOM() {
     setSceneInfos((prev) => {
@@ -117,23 +115,9 @@ function Section3() {
     }
   }
 
-  function setCurrentScene() {
-    let totalScrollHeight = 0;
-    for (let i = 0; i < allSceneInfos.length; i++) {
-      totalScrollHeight += allSceneInfos[i].scrollHeight;
-      if (totalScrollHeight >= window.scrollY) {
-        setScrollInfoValue((prev) => {
-          const newArray = {...prev, currentScene: i};
-          return newArray;
-        });
-        break;
-      }
-    }
-
-    document.body.setAttribute("id", `show-scene-${scrollInfoValue.currentScene}`);
-  }
-
   useEffect(() => {
+    canvasRef.current?.classList.add("sticky");
+
     if (document.readyState === "complete") {
       setHeight(() => {
         return `${currentSceneInfo.heightNum * window.innerHeight}px`;
@@ -155,12 +139,6 @@ function Section3() {
     });
   }, []);
 
-  useEffect(() => {
-    if (allSceneInfos[1].scrollHeight) {
-      setCurrentScene();
-    }
-  }, [allSceneInfos, window.scrollY]);
-
   return (
     <Section ref={scrollSection3} height={height} id="scroll-section-3">
       <MidMessage>
@@ -170,7 +148,7 @@ function Section3() {
         <br />
         아름답고 부드러운 음료 공간.
       </MidMessage>
-      <Canvas width="1920" height="1080" className="sticky" ref={canvasRef}></Canvas>
+      <Canvas width="1920" height="1080" ref={canvasRef}></Canvas>
       <CanvasCaption id="canvas-caption">
         Lorem ipsum, dolor sit amet consectetur adipisicing elit. Accusamus
         dicta nulla libero consequuntur officia nesciunt veniam quidem magni

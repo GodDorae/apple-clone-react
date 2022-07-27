@@ -234,17 +234,6 @@ export const sceneInfo = atom<
   default: [sceneInfo0, sceneInfo1, sceneInfo2, sceneInfo3],
 });
 
-export const initialSceneInfo = selector<
-  [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3]
->({
-  key: "initialSceneInfo",
-  get: ({ get }) => {
-    const allSceneInfos = get(sceneInfo);
-    return allSceneInfos;
-  },
-  set: ({ set }, newValue) => set(sceneInfo, newValue),
-});
-
 interface IScrollInfo {
   prevScrollHeight: number
   currentScene: number

@@ -6,7 +6,6 @@ import {
   ISceneInfo2,
   ISceneInfo3,
   sceneInfo,
-  scrollInfo,
 } from "../interface";
 import { useRecoilState } from "recoil";
 
@@ -46,8 +45,8 @@ const MainMessage = styled.div`
   }
 `;
 
-const Canvas = styled.div<{ showScene: boolean }>`
-  display: ${(props) => (props.showScene ? "block" : "none")};
+const Canvas = styled.div<{ showScene: string }>`
+  display: ${(props) => props.showScene === "show-scene-2" ? "block" : "none"};
   position: fixed;
   top: 0;
   left: 0;
@@ -77,14 +76,14 @@ const Pin = styled.div`
   background-color: rgb(29, 29, 31);
 `;
 
-const MessageA = styled(MainMessage)<{ showScene: boolean }>`
-  display: ${(props) => (props.showScene ? "block" : "none")};
+const MessageA = styled(MainMessage)<{ showScene: string }>`
+  display: ${(props) => props.showScene === "show-scene-2" ? "block" : "none"};
   position: fixed;
   left: 0;
   width: 100%;
 `;
-const MessageB = styled(DescMessage)<{ showScene: boolean }>`
-  display: ${(props) => (props.showScene ? "block" : "none")};
+const MessageB = styled(DescMessage)<{ showScene: string }>`
+  display: ${(props) => props.showScene === "show-scene-2" ? "block" : "none"};
   position: fixed;
   width: 100%;
   top: 10%;
@@ -95,8 +94,8 @@ const MessageB = styled(DescMessage)<{ showScene: boolean }>`
     left: 53%;
   }
 `;
-const MessageC = styled(DescMessage)<{ showScene: boolean }>`
-  display: ${(props) => (props.showScene ? "block" : "none")};
+const MessageC = styled(DescMessage)<{ showScene: string }>`
+  display: ${(props) => props.showScene === "show-scene-2" ? "block" : "none"};
   position: fixed;
   width: 100%;
   top: 15%;
@@ -109,7 +108,6 @@ const MessageC = styled(DescMessage)<{ showScene: boolean }>`
 
 function Section2() {
   const sceneNumber = 2;
-  const [showScene, setShowScene] = useState(false);
   const scrollSection2 = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [allSceneInfos, setSceneInfos] = useRecoilState(sceneInfo);
@@ -117,7 +115,6 @@ function Section2() {
   const [height, setHeight] = useState(
     `${currentSceneInfo.heightNum * window.innerHeight}px`
   );
-  const [scrollInfoValue, setScrollInfoValue] = useRecoilState(scrollInfo);
 
   const setDOM = useCallback(() => {
     setSceneInfos((prev) => {
@@ -176,25 +173,6 @@ function Section2() {
     }
   }
 
-  function setCurrentScene() {
-    let totalScrollHeight = 0;
-    for (let i = 0; i < allSceneInfos.length; i++) {
-      totalScrollHeight += allSceneInfos[i].scrollHeight;
-      if (totalScrollHeight >= window.scrollY) {
-        setScrollInfoValue((prev) => {
-          const newArray = { ...prev, currentScene: i };
-          return newArray;
-        });
-        break;
-      }
-    }
-
-    document.body.setAttribute(
-      "id",
-      `show-scene-${scrollInfoValue.currentScene}`
-    );
-  }
-
   useEffect(() => {
     if (document.readyState === "complete") {
       setHeight(() => {
@@ -217,29 +195,9 @@ function Section2() {
     setLayout();
   }, [setDOM]);
 
-  useEffect(() => {
-    if (allSceneInfos[1].scrollHeight) {
-      setCurrentScene();
-    }
-  }, [allSceneInfos, window.scrollY]);
-
-  useEffect(() => {
-    if (allSceneInfos[1].scrollHeight) {
-      if (document.body.id === "show-scene-2") {
-        setShowScene(() => {
-          return true;
-        });
-      } else {
-        setShowScene(() => {
-          return false;
-        });
-      }
-    }
-  }, [allSceneInfos, document.body.id]);
-
   return (
     <Section ref={scrollSection2} height={height} id="scroll-section-2">
-      <Canvas showScene={showScene}>
+      <Canvas showScene={document.body.id}>
         <canvas
           id="video-canvas-0"
           ref={canvasRef}
@@ -247,13 +205,13 @@ function Section2() {
           height="1080"
         ></canvas>
       </Canvas>
-      <MessageA className="section2-a" showScene={showScene}>
+      <MessageA showScene={document.body.id} className="section2-a">
         <p>
           <small>편안한 촉감</small> <br/>
           입과 하나 되다
         </p>
       </MessageA>
-      <MessageB className="section2-b" showScene={showScene}>
+      <MessageB showScene={document.body.id} className="section2-b">
         <p>
           편안한 목넘김을 완성하는 디테일한 여러 구성 요소들, <br />
           우리는 이를 하나하나 새롭게 살피고 재구성하는 과정을 거쳐 새로운
@@ -264,7 +222,7 @@ function Section2() {
         </p>
         <Pin className="section2-b-pin" />
       </MessageB>
-      <MessageC className="section2-c" showScene={showScene}>
+      <MessageC showScene={document.body.id} className="section2-c">
         <p>
           Design and quality of Sweden,
           <br />

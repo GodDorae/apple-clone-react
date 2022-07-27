@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
   ISceneInfo,
@@ -6,7 +6,6 @@ import {
   ISceneInfo2,
   ISceneInfo3,
   sceneInfo,
-  scrollInfo
 } from "../interface";
 import { useRecoilState } from "recoil";
 
@@ -48,8 +47,8 @@ const MainMessage = styled.div`
   }
 `;
 
-const Canvas = styled.div<{ showScene: boolean }>`
-  display: ${(props) => (props.showScene ? "block" : "none")};
+const Canvas = styled.div<{ showScene: string }>`
+  display: ${(props) => props.showScene === "show-scene-0" ? "block" : "none"};
   position: fixed;
   top: 0;
   left: 0;
@@ -63,26 +62,26 @@ const Canvas = styled.div<{ showScene: boolean }>`
   }
 `;
 
-const MainMessageA = styled(MainMessage)<{ showScene: boolean }>`
-  display: ${(props) => (props.showScene ? "block" : "none")};
+const MainMessageA = styled(MainMessage)<{ showScene: string }>`
+  display: ${(props) => props.showScene === "show-scene-0" ? "block" : "none"};
   position: fixed;
   left: 0;
   width: 100%;
 `;
-const MainMessageB = styled(MainMessage)<{ showScene: boolean }>`
-  display: ${(props) => (props.showScene ? "block" : "none")};
+const MainMessageB = styled(MainMessage)<{ showScene: string }>`
+  display: ${(props) => props.showScene === "show-scene-0" ? "block" : "none"};
   position: fixed;
   left: 0;
   width: 100%;
 `;
-const MainMessageC = styled(MainMessage)<{ showScene: boolean }>`
-  display: ${(props) => (props.showScene ? "block" : "none")};
+const MainMessageC = styled(MainMessage)<{ showScene: string }>`
+  display: ${(props) => props.showScene === "show-scene-0" ? "block" : "none"};
   position: fixed;
   left: 0;
   width: 100%;
 `;
-const MainMessageD = styled(MainMessage)<{ showScene: boolean }>`
-  display: ${(props) => (props.showScene ? "block" : "none")};
+const MainMessageD = styled(MainMessage)<{ showScene: string }>`
+  display: ${(props) => props.showScene === "show-scene-0" ? "block" : "none"};
   position: fixed;
   left: 0;
   width: 100%;
@@ -90,7 +89,6 @@ const MainMessageD = styled(MainMessage)<{ showScene: boolean }>`
 
 function Section0() {
   const sceneNumber = 0;
-  const [showScene, setShowScene] = useState(false);
   const scrollSection0 = useRef<HTMLElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [allSceneInfos, setSceneInfos] = useRecoilState(sceneInfo);
@@ -98,7 +96,6 @@ function Section0() {
   const [height, setHeight] = useState(
     `${currentSceneInfo.heightNum * window.innerHeight}px`
   );
-  const [scrollInfoValue, setScrollInfoValue] = useRecoilState(scrollInfo);
 
   const setDOM = useCallback(() => {
     setSceneInfos((prev) => {
@@ -114,8 +111,8 @@ function Section0() {
         canvas: canvasRef.current,
         context: canvasRef.current?.getContext("2d"),
       };
-      const originalObj = { ...prev[sceneNumber].objs }
-      const updatedObj = {  ...originalObj, ...containerElement, ...messageObj };
+      const originalObj = { ...prev[sceneNumber].objs };
+      const updatedObj = { ...originalObj, ...containerElement, ...messageObj };
       const updatedSceneInfo = { ...prev[sceneNumber], objs: updatedObj };
       const before = prev.slice(0, sceneNumber);
       const after = prev.slice(sceneNumber + 1);
@@ -139,7 +136,9 @@ function Section0() {
 
       const heightRatio = window.innerHeight / 1080;
       if (allSceneInfos[sceneNumber].objs.canvas) {
-        allSceneInfos[sceneNumber].objs.canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${heightRatio})`;
+        allSceneInfos[
+          sceneNumber
+        ].objs.canvas.style.transform = `translate3d(-50%, -50%, 0) scale(${heightRatio})`;
       }
     } else if (allSceneInfos[sceneNumber].type === "normal") {
       setSceneInfos((prev) => {
@@ -154,22 +153,6 @@ function Section0() {
         return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
       });
     }
-  }
-
-  function setCurrentScene() {
-    let totalScrollHeight = 0;
-    for (let i = 0; i < allSceneInfos.length; i++) {
-      totalScrollHeight += allSceneInfos[i].scrollHeight;
-      if (totalScrollHeight >= window.scrollY) {
-        setScrollInfoValue((prev) => {
-          const newArray = {...prev, currentScene: i};
-          return newArray;
-        });
-        break;
-      }
-    }
-
-    document.body.setAttribute("id", `show-scene-${scrollInfoValue.currentScene}`);
   }
 
   useEffect(() => {
@@ -194,54 +177,39 @@ function Section0() {
     setLayout();
   }, [setDOM]);
 
-  useEffect(() => {
-    if (allSceneInfos[1].scrollHeight) {
-      setCurrentScene();
-    }
-  }, [allSceneInfos, window.scrollY]);
-
-  useEffect(() => {
-    if (allSceneInfos[1].scrollHeight) {
-      if (document.body.id === "show-scene-0") {
-        setShowScene(() => {
-          return true;
-        })
-      } else {
-        setShowScene(() => {
-          return false;
-        })
-      }
-    }
-  }, [allSceneInfos, document.body.id]);
-
   return (
     <Section ref={scrollSection0} height={height} id="scroll-section-0">
       <Title>Airmug Pro</Title>
-      <Canvas showScene={showScene}>
-        <canvas id="video-canvas-0" ref={canvasRef} width="1920" height="1080"></canvas>
+      <Canvas showScene={document.body.id}>
+        <canvas
+          id="video-canvas-0"
+          ref={canvasRef}
+          width="1920"
+          height="1080"
+        ></canvas>
       </Canvas>
-      <MainMessageA className="section0-a" showScene={showScene}>
+      <MainMessageA showScene={document.body.id} className="section0-a">
         <p>
           온전히 빠져들게 하는
           <br />
           최고급 세라믹
         </p>
       </MainMessageA>
-      <MainMessageB className="section0-b" showScene={showScene}>
+      <MainMessageB showScene={document.body.id} className="section0-b">
         <p>
           주변 맛을 느끼게 해주는
           <br />
           주변 맛 허용 모드
         </p>
       </MainMessageB>
-      <MainMessageC className="section0-c" showScene={showScene}>
+      <MainMessageC showScene={document.body.id} className="section0-c">
         <p>
           온종일 편안한
           <br />
           맞춤형 손잡이
         </p>
       </MainMessageC>
-      <MainMessageD className="section0-d" showScene={showScene}>
+      <MainMessageD showScene={document.body.id} className="section0-d">
         <p>
           새롭게 입가를
           <br />
