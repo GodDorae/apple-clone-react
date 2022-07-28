@@ -6,19 +6,19 @@ import {
   ISceneInfo2,
   ISceneInfo3,
   sceneInfo,
-  scrollInfo
 } from "../interface";
 import { useRecoilState } from "recoil";
 
 const Section = styled.section< { height: string } >`
   height: ${(props) => props.height};
   padding-top: 50vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
 `;
 
 const Canvas = styled.canvas`
-  position: static;
-  top: auto;
-
   &.sticky {
     position: fixed;
     top: 0;

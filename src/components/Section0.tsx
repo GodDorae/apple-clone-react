@@ -1,4 +1,4 @@
-import styled, { css } from "styled-components";
+import styled from "styled-components";
 import { useState, useRef, useEffect, useCallback } from "react";
 import {
   ISceneInfo,

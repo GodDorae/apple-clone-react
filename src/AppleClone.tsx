@@ -396,7 +396,6 @@ function AppleClone() {
         break;
       case 3:
         const objs3 = allSceneInfos[3].objs;
-        const values3 = allSceneInfos[3].values;
 
         if (objs3.canvas && objs3.canvasCaption) {
           const widthRatio = window.innerWidth / objs3.canvas.width;
@@ -412,178 +411,154 @@ function AppleClone() {
           }
 
           objs3.canvas.style.transform = `scale(${canvasScaleRatio})`;
-          objs3.context.fillStyle = "white";
+          // objs3.context.fillStyle = "white";
           objs3.context.drawImage(objs3.images[0], 0, 0);
 
           const recalculatedInnerWidth =
             document.body.offsetWidth / canvasScaleRatio;
           const whiteRectWidth = recalculatedInnerWidth * 0.15;
 
-          setAllSceneInfos((prev) => {
-            if (objs3.canvas && objs3.canvasCaption) {
-              const rectStartY =
-                objs3.canvas.offsetTop +
-                (objs3.canvas.height * (1 - canvasScaleRatio)) / 2;
-              const rect1XStart =
-                window.innerHeight / 2 / allSceneInfos[3].scrollHeight;
-              const rect1XEnd = rectStartY / allSceneInfos[3].scrollHeight;
-              const rect2XStart = rect1XStart;
-              const rect2XEnd = rect1XEnd;
+          const rectStartY =
+            objs3.canvas.offsetTop +
+            (objs3.canvas.height * (1 - canvasScaleRatio)) / 2;
+          const rect1XStart =
+            window.innerHeight / 2 / allSceneInfos[3].scrollHeight;
+          const rect1XEnd = rectStartY / allSceneInfos[3].scrollHeight;
+          const rect2XStart = rect1XStart;
+          const rect2XEnd = rect1XEnd;
+          const rect1XStartPoint =
+            (objs3.canvas.width - recalculatedInnerWidth) / 2;
+          const rect1XEndPoint = rect1XStartPoint - whiteRectWidth;
+          const rect2XStartPoint =
+            rect1XStartPoint + recalculatedInnerWidth - whiteRectWidth;
+          const rect2XEndPoint = rect2XStartPoint + whiteRectWidth;
 
-              const rect1XStartPoint =
-                (objs3.canvas.width - recalculatedInnerWidth) / 2;
-              const rect1XEndPoint = rect1XStartPoint - whiteRectWidth;
-              const rect2XStartPoint =
-                rect1XStartPoint + recalculatedInnerWidth - whiteRectWidth;
-              const rect2XEndPoint = rect2XStartPoint + whiteRectWidth;
+          const rect1X: [number, number, { start: number; end: number }] = [
+            rect1XStartPoint,
+            rect1XEndPoint,
+            { start: rect1XStart, end: rect1XEnd },
+          ];
+          const rect2X: [number, number, { start: number; end: number }] = [
+            rect2XStartPoint,
+            rect2XEndPoint,
+            { start: rect2XStart, end: rect2XEnd },
+          ];
 
-              const rect1X: [number, number, { start: number; end: number }] = [
-                rect1XStartPoint,
-                rect1XEndPoint,
-                { start: rect1XStart, end: rect1XEnd },
-              ];
-              const rect2X: [number, number, { start: number; end: number }] = [
-                rect2XStartPoint,
-                rect2XEndPoint,
-                { start: rect2XStart, end: rect2XEnd },
-              ];
+          const blendHeightStartPoint = 0;
+          const blendHeightEndPoint = objs3.canvas.height;
+          const blendHeightStart = rect1XEnd;
+          const blendHeightEnd = blendHeightStart + 0.2;
+          const blendHeightArray: [
+            number,
+            number,
+            { start: number; end: number }
+          ] = [
+            blendHeightStartPoint,
+            blendHeightEndPoint,
+            { start: blendHeightStart, end: blendHeightEnd },
+          ];
 
-              const blendHeightStartPoint = 0;
-              const blendHeightEndPoint = objs3.canvas.height;
-              const blendHeightStart = rect1XEnd;
-              const blendHeightEnd = blendHeightStart + 0.2;
-              const blendHeightArray: [
-                number,
-                number,
-                { start: number; end: number }
-              ] = [
-                blendHeightStartPoint,
-                blendHeightEndPoint,
-                { start: blendHeightStart, end: blendHeightEnd },
-              ];
+          const csStartPoint = canvasScaleRatio;
+          const csEndPoint =
+            document.body.offsetWidth / (1.5 * objs3.canvas.width);
+          const csStart = blendHeightEnd;
+          const csEnd = csStart + 0.2;
+          const cs: [number, number, { start: number; end: number }] = [
+            csStartPoint,
+            csEndPoint,
+            { start: csStart, end: csEnd },
+          ];
 
-              const csStartPoint = canvasScaleRatio;
-              const csEndPoint =
-                document.body.offsetWidth / (1.5 * objs3.canvas.width);
-              const csStart = blendHeightEnd;
-              const csEnd = csStart + 0.2;
-              const cs: [number, number, { start: number; end: number }] = [
-                csStartPoint,
-                csEndPoint,
-                { start: csStart, end: csEnd },
-              ];
+          const ccoStart = csEnd;
+          const ccoEnd = ccoStart + 0.1;
+          const cco: [number, number, { start: number; end: number }] = [
+            0,
+            1,
+            { start: ccoStart, end: ccoEnd },
+          ];
 
-              const ccoStart = csEnd;
-              const ccoEnd = ccoStart + 0.1;
-              const cco: [number, number, { start: number; end: number }] = [
-                0,
-                1,
-                { start: ccoStart, end: ccoEnd },
-              ];
-              objs3.canvasCaption.style.opacity = `${calcValues(
-                cco,
-                currentYOffset
-              )}`;
+          const cctStart = csEnd;
+          const cctEnd = cctStart + 0.1;
+          const cct: [number, number, { start: number; end: number }] = [
+            0,
+            1,
+            { start: cctStart, end: cctEnd },
+          ];
 
-              const cctStart = csEnd;
-              const cctEnd = cctStart + 0.1;
-              const cct: [number, number, { start: number; end: number }] = [
-                0,
-                1,
-                { start: cctStart, end: cctEnd },
-              ];
-
-              const newValues3 = {
-                rect1X,
-                rect2X,
-                rectStartY,
-                blendHeight: blendHeightArray,
-                canvas_scale: cs,
-                canvasCaption_opacity: cco,
-                canvasCaption_translateY: cct,
-              };
-
-              const newSceneInfo3 = { ...prev[3], values: newValues3 };
-              const newArray = [prev[0], prev[1], prev[2], newSceneInfo3];
-
-              return newArray as [
-                ISceneInfo0,
-                ISceneInfo,
-                ISceneInfo2,
-                ISceneInfo3
-              ];
-            } else {
-              return prev;
-            }
-          });
-
-          const blendHeight = calcValues(values3.blendHeight, currentYOffset);
-
-          if (blendHeight) {
-            objs3.context.drawImage(
-              objs3.images[1],
+          const rect1XCalculation = calcValues(rect1X, currentYOffset);
+          if (rect1XCalculation) {
+            objs3.context.fillRect(
+              Math.round(rect1XCalculation),
               0,
-              objs3.canvas.height - blendHeight,
-              objs3.canvas.width,
-              blendHeight,
-              0,
-              objs3.canvas.height - blendHeight,
-              objs3.canvas.width,
-              blendHeight
+              Math.round(whiteRectWidth),
+              objs3.canvas.height
             );
           }
 
-          objs3.context.fillRect(
-            calcValues(values3.rect1X, currentYOffset),
-            0,
-            whiteRectWidth,
-            objs3.canvas.height
-          );
-          objs3.context.fillRect(
-            calcValues(values3.rect2X, currentYOffset),
-            0,
-            whiteRectWidth,
-            objs3.canvas.height
-          );
+          const rect2XCalculation = calcValues(rect2X, currentYOffset);
+          if (rect2XCalculation) {
+            objs3.context.fillRect(
+              Math.round(rect2XCalculation),
+              0,
+              Math.round(whiteRectWidth),
+              objs3.canvas.height
+            );
+          }
 
-          if (scrollRatio < values3.rect1X[2].end) {
+          if (scrollRatio < rect1X[2].end) {
             objs3.canvas.classList.remove("sticky");
           } else {
+            const blendHeight = calcValues(blendHeightArray, currentYOffset);
+
+            if (blendHeight) {
+              objs3.context.drawImage(
+                objs3.images[1],
+                0,
+                objs3.canvas.height - blendHeight,
+                objs3.canvas.width,
+                blendHeight,
+                0,
+                objs3.canvas.height - blendHeight,
+                objs3.canvas.width,
+                blendHeight
+              );
+            }
+
             objs3.canvas.classList.add("sticky");
             objs3.canvas.style.top = `${
               -(objs3.canvas.height * (1 - canvasScaleRatio)) / 2
             }px`;
 
-            if (scrollRatio > values3.blendHeight[2].end) {
+            if (scrollRatio > blendHeightArray[2].end) {
               objs3.canvas.style.transform = `scale(${calcValues(
-                values3.canvas_scale,
+                cs,
                 currentYOffset
               )})`;
 
-              if (scrollRatio > values3.canvas_scale[2].end && values3.canvas_scale[2].end > 0) {
-                objs3.canvas.classList.remove("sticky");
-                objs3.canvas.style.marginTop = `${
-                  allSceneInfos[3].scrollHeight * 0.4
-                }px`;
+            if (scrollRatio > cs[2].end && cs[2].end > 0) {
+              objs3.canvas.classList.remove("sticky");
+              objs3.canvas.style.marginTop = `${
+                allSceneInfos[3].scrollHeight * 0.4
+              }px`;
 
-                objs3.canvasCaption.style.opacity = `${calcValues(
-                  values3.canvasCaption_opacity,
-                  currentYOffset
-                )}`;
+              objs3.canvasCaption.style.opacity = `${calcValues(
+                cco,
+                currentYOffset
+              )}`;
 
-                objs3.canvasCaption.style.transform = `translate3d(0, ${calcValues(
-                  values3.canvasCaption_translateY,
-                  currentYOffset
-                )}%, 0)`;
-              } else {
-                objs3.canvas.style.marginTop = "0";
-              }
+              objs3.canvasCaption.style.transform = `translate3d(0, ${calcValues(
+                cct,
+                currentYOffset
+              )}%, 0)`;
+            } else {
+              objs3.canvas.style.marginTop = "0";
             }
           }
         }
-        break;
+      }
+      break;
     }
-  }, [scrollLoop, allSceneInfos]);
+  }, [scrollLoop, scrollInfoValue]);
 
   useEffect(() => {
     setCanvasImages();
