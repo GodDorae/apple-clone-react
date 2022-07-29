@@ -396,6 +396,7 @@ function AppleClone() {
         break;
       case 3:
         const objs3 = allSceneInfos[3].objs;
+        const values3 = allSceneInfos[3].values;
 
         if (objs3.canvas && objs3.canvasCaption) {
           const widthRatio = window.innerWidth / objs3.canvas.width;
@@ -418,74 +419,7 @@ function AppleClone() {
             document.body.offsetWidth / canvasScaleRatio;
           const whiteRectWidth = recalculatedInnerWidth * 0.15;
 
-          const rectStartY =
-            objs3.canvas.offsetTop +
-            (objs3.canvas.height * (1 - canvasScaleRatio)) / 2;
-          const rect1XStart =
-            window.innerHeight / 2 / allSceneInfos[3].scrollHeight;
-          const rect1XEnd = rectStartY / allSceneInfos[3].scrollHeight;
-          const rect2XStart = rect1XStart;
-          const rect2XEnd = rect1XEnd;
-          const rect1XStartPoint =
-            (objs3.canvas.width - recalculatedInnerWidth) / 2;
-          const rect1XEndPoint = rect1XStartPoint - whiteRectWidth;
-          const rect2XStartPoint =
-            rect1XStartPoint + recalculatedInnerWidth - whiteRectWidth;
-          const rect2XEndPoint = rect2XStartPoint + whiteRectWidth;
-
-          const rect1X: [number, number, { start: number; end: number }] = [
-            rect1XStartPoint,
-            rect1XEndPoint,
-            { start: rect1XStart, end: rect1XEnd },
-          ];
-          const rect2X: [number, number, { start: number; end: number }] = [
-            rect2XStartPoint,
-            rect2XEndPoint,
-            { start: rect2XStart, end: rect2XEnd },
-          ];
-
-          const blendHeightStartPoint = 0;
-          const blendHeightEndPoint = objs3.canvas.height;
-          const blendHeightStart = rect1XEnd;
-          const blendHeightEnd = blendHeightStart + 0.2;
-          const blendHeightArray: [
-            number,
-            number,
-            { start: number; end: number }
-          ] = [
-            blendHeightStartPoint,
-            blendHeightEndPoint,
-            { start: blendHeightStart, end: blendHeightEnd },
-          ];
-
-          const csStartPoint = canvasScaleRatio;
-          const csEndPoint =
-            document.body.offsetWidth / (1.5 * objs3.canvas.width);
-          const csStart = blendHeightEnd;
-          const csEnd = csStart + 0.2;
-          const cs: [number, number, { start: number; end: number }] = [
-            csStartPoint,
-            csEndPoint,
-            { start: csStart, end: csEnd },
-          ];
-
-          const ccoStart = csEnd;
-          const ccoEnd = ccoStart + 0.1;
-          const cco: [number, number, { start: number; end: number }] = [
-            0,
-            1,
-            { start: ccoStart, end: ccoEnd },
-          ];
-
-          const cctStart = csEnd;
-          const cctEnd = cctStart + 0.1;
-          const cct: [number, number, { start: number; end: number }] = [
-            0,
-            1,
-            { start: cctStart, end: cctEnd },
-          ];
-
-          const rect1XCalculation = calcValues(rect1X, currentYOffset);
+          const rect1XCalculation = calcValues(values3.rect1X, currentYOffset);
           if (rect1XCalculation) {
             objs3.context.fillRect(
               Math.round(rect1XCalculation),
@@ -495,7 +429,7 @@ function AppleClone() {
             );
           }
 
-          const rect2XCalculation = calcValues(rect2X, currentYOffset);
+          const rect2XCalculation = calcValues(values3.rect2X, currentYOffset);
           if (rect2XCalculation) {
             objs3.context.fillRect(
               Math.round(rect2XCalculation),
@@ -505,10 +439,10 @@ function AppleClone() {
             );
           }
 
-          if (scrollRatio < rect1X[2].end) {
+          if (scrollRatio < values3.rect1X[2].end) {
             objs3.canvas.classList.remove("sticky");
           } else {
-            const blendHeight = calcValues(blendHeightArray, currentYOffset);
+            const blendHeight = calcValues(values3.blendHeight, currentYOffset);
 
             if (blendHeight) {
               objs3.context.drawImage(
@@ -529,43 +463,154 @@ function AppleClone() {
               -(objs3.canvas.height * (1 - canvasScaleRatio)) / 2
             }px`;
 
-            if (scrollRatio > blendHeightArray[2].end) {
+            if (scrollRatio > values3.blendHeight[2].end) {
               objs3.canvas.style.transform = `scale(${calcValues(
-                cs,
+                values3.canvas_scale,
                 currentYOffset
               )})`;
 
-            if (scrollRatio > cs[2].end && cs[2].end > 0) {
-              objs3.canvas.classList.remove("sticky");
-              objs3.canvas.style.marginTop = `${
-                allSceneInfos[3].scrollHeight * 0.4
-              }px`;
+              if (
+                scrollRatio > values3.canvas_scale[2].end &&
+                values3.canvas_scale[2].end > 0
+              ) {
+                objs3.canvas.classList.remove("sticky");
+                objs3.canvas.style.marginTop = `${
+                  allSceneInfos[3].scrollHeight * 0.4
+                }px`;
 
-              objs3.canvasCaption.style.opacity = `${calcValues(
-                cco,
-                currentYOffset
-              )}`;
+                objs3.canvasCaption.style.opacity = `${calcValues(
+                  values3.canvasCaption_opacity,
+                  currentYOffset
+                )}`;
 
-              objs3.canvasCaption.style.transform = `translate3d(0, ${calcValues(
-                cct,
-                currentYOffset
-              )}%, 0)`;
-            } else {
-              objs3.canvas.style.marginTop = "0";
+                objs3.canvasCaption.style.transform = `translate3d(0, ${calcValues(
+                  values3.canvasCaption_translateY,
+                  currentYOffset
+                )}%, 0)`;
+              } else {
+                objs3.canvas.style.marginTop = "0";
+              }
             }
           }
         }
-      }
-      break;
+        break;
     }
   }, [scrollLoop, scrollInfoValue]);
+
+  function setScene3Values() {
+    const scene3 = allSceneInfos[3];
+    const objs3 = scene3.objs;
+
+    if (objs3.canvas) {
+      const widthRatio = window.innerWidth / objs3.canvas.width;
+      const heightRatio = window.innerHeight / objs3.canvas.height;
+      let canvasScaleRatio: number;
+
+      if (widthRatio <= heightRatio) {
+        // 캔버스보다 브라우저 창이 홀쭉한 경우
+        canvasScaleRatio = heightRatio;
+      } else {
+        // 캔버스보다 브라우저 창이 납작한 경우
+        canvasScaleRatio = widthRatio;
+      }
+
+      const recalculatedInnerWidth =
+        document.body.offsetWidth / canvasScaleRatio;
+      const whiteRectWidth = recalculatedInnerWidth * 0.15;
+
+      const rectStartY =
+        objs3.canvas.offsetTop +
+        (objs3.canvas.height * (1 - canvasScaleRatio)) / 2;
+      const rect1XStart =
+        window.innerHeight / 2 / allSceneInfos[3].scrollHeight;
+      const rect1XEnd = rectStartY / allSceneInfos[3].scrollHeight;
+      const rect2XStart = rect1XStart;
+      const rect2XEnd = rect1XEnd;
+      const rect1XStartPoint =
+        (objs3.canvas.width - recalculatedInnerWidth) / 2;
+      const rect1XEndPoint = rect1XStartPoint - whiteRectWidth;
+      const rect2XStartPoint =
+        rect1XStartPoint + recalculatedInnerWidth - whiteRectWidth;
+      const rect2XEndPoint = rect2XStartPoint + whiteRectWidth;
+
+      const rect1X: [number, number, { start: number; end: number }] = [
+        rect1XStartPoint,
+        rect1XEndPoint,
+        { start: rect1XStart, end: rect1XEnd },
+      ];
+      const rect2X: [number, number, { start: number; end: number }] = [
+        rect2XStartPoint,
+        rect2XEndPoint,
+        { start: rect2XStart, end: rect2XEnd },
+      ];
+
+      const blendHeightStartPoint = 0;
+      const blendHeightEndPoint = objs3.canvas.height;
+      const blendHeightStart = rect1XEnd;
+      const blendHeightEnd = blendHeightStart + 0.2;
+      const blendHeightArray: [number, number, { start: number; end: number }] =
+        [
+          blendHeightStartPoint,
+          blendHeightEndPoint,
+          { start: blendHeightStart, end: blendHeightEnd },
+        ];
+
+      const csStartPoint = canvasScaleRatio;
+      const csEndPoint = document.body.offsetWidth / (1.5 * objs3.canvas.width);
+      const csStart = blendHeightEnd;
+      const csEnd = csStart + 0.2;
+      const cs: [number, number, { start: number; end: number }] = [
+        csStartPoint,
+        csEndPoint,
+        { start: csStart, end: csEnd },
+      ];
+
+      const ccoStart = csEnd;
+      const ccoEnd = ccoStart + 0.1;
+      const cco: [number, number, { start: number; end: number }] = [
+        0,
+        1,
+        { start: ccoStart, end: ccoEnd },
+      ];
+
+      const cctStart = csEnd;
+      const cctEnd = cctStart + 0.1;
+      const cct: [number, number, { start: number; end: number }] = [
+        0,
+        1,
+        { start: cctStart, end: cctEnd },
+      ];
+
+      setAllSceneInfos((prev) => {
+        const newValues = {
+          rect1X: rect1X,
+          rect2X: rect2X,
+          rectStartY: rectStartY,
+          blendHeight: blendHeightArray,
+          canvas_scale: cs,
+          canvasCaption_opacity: cco,
+          canvasCaption_translateY: cct,
+        };
+        const newScene3 = { ...prev[3], values: newValues };
+        const newArray = [prev[0], prev[1], prev[2], newScene3];
+
+        return newArray as [ISceneInfo0, ISceneInfo, ISceneInfo2, ISceneInfo3];
+      });
+    }
+  }
 
   useEffect(() => {
     setCanvasImages();
   }, []);
 
   useEffect(() => {
-    if (allSceneInfos[1].scrollHeight) {
+    if (allSceneInfos[3].objs.canvas) {
+      setScene3Values();
+    }
+  }, [allSceneInfos[3].objs.canvas]);
+
+  useEffect(() => {
+    if (allSceneInfos[1].scrollHeight && allSceneInfos[3].values.rectStartY) {
       setCurrentScene();
       window.addEventListener("scroll", scrollLoop);
     }
